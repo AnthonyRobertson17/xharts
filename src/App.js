@@ -2,6 +2,7 @@ import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import BackendAdapter from './backend-adapter.js'
+import LineGraph from './line-graph.js'
 
 class App extends React.Component {
 
@@ -29,9 +30,7 @@ class App extends React.Component {
       <div className="App">
         <h1>This is a test app</h1>
         <div>
-          <pre style={{textAlign:"left"}}>
-            {JSON.stringify(this.state.data, null, 2)}
-          </pre>
+          <LineGraph/>
         </div>
       </div>
     );
