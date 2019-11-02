@@ -2,11 +2,13 @@
 .PHONY: help
 
 help: ## Show all the available make commands
-	@echo "<<<XHARTS HELP>>>"
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+	@echo "======================================================================================================================================================================="
+	@awk '/```ascii/{a=1; next}/```/{a=0}(a==1){print}' README.md
+	@echo "=======================================================================================================================================================================\n\n"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 server: ## Start up the front end
-# 	test -f /.dockerenv || docker-compose build xharts-dev
+	test -f /.dockerenv || docker-compose build xharts-dev
 	test -f /.dockerenv || docker-compose run -p 3000:3000 --rm --name xharts xharts-dev
 	test -f /.dockerenv && npm start
 
