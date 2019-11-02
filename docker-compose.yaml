@@ -1,10 +1,11 @@
 version: '2'
 services:
   xharts-dev:
-    # image: 'node'
     build:
       context: .
       dockerfile: Dockerfile
     command: 'bash'
+    ports:
+      - "3000:3000"
     volumes:
       - .:/usr/src/app
