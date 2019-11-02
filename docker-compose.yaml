@@ -1,0 +1,10 @@
+version: '2'
+services:
+  xharts-dev:
+    # image: 'node'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: 'bash'
+    volumes:
+      - .:/usr/src/app
