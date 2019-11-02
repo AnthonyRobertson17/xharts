@@ -6,3 +6,5 @@ COPY package.json .
 COPY package-lock.json .
 
 RUN yarn
+
+EXPOSE 3000
