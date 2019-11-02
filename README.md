@@ -13,7 +13,26 @@
    `*'´                                           '               `¨'                                                           °              '`*'´
 ```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Purpose
+Web Front-end for [metrix](https://github.com/woodgern/metrix)
+
+We want to render timeseries data, with arbitrary schemas.
+
+# Expected schema:
+```
+{
+  "datetime": "datetimeISOStringZ",
+  "name": "arbitrary event name",
+  "date": {
+    // arbitrary JSON
+  }
+}
+```
+
+# Current state:
+![](/docs/screenshot.png)
+
+# Development
 
 ## Available Scripts
 
@@ -26,6 +45,8 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
+
+*** BELOW THIS IS ALL BOILERPLATE FROM REACT-CREATE-APP ***
 
 ### `make test`
 
