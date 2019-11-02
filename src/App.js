@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import BackendAdapter from './backend-adapter.js'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      isLoading: true
+    };
+  }
+
+  componentDidMount() {
+    console.log("START");
+    BackendAdapter.getAllData().then(res => {
+      console.log("DONE", res.data);
+      this.setState({
+        data: res.data,
+        isLoading: false
+      });
+    });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <h1>This is a test app</h1>
+        <div>
+          <pre style={{textAlign:"left"}}>
+            {JSON.stringify(this.state.data, null, 2)}
+          </pre>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
