@@ -1,8 +1,9 @@
 import React from 'react';
-// import logo from './logo.svg';
+import {DateRangePicker} from 'react-dates'
 import './App.css';
 import BackendAdapter from './backend-adapter.js'
 import LineGraph from './line-graph.js'
+import 'react-dates/initialize';
 
 class App extends React.Component {
 
@@ -20,7 +21,9 @@ class App extends React.Component {
       console.log("DONE", res.data);
       this.setState({
         data: res.data,
-        isLoading: false
+        isLoading: false,
+        startDate: null,
+        endDate: null,
       });
     });
   }
@@ -29,6 +32,17 @@ class App extends React.Component {
     return (
       <div className="App">
         <h1>This is a test app</h1>
+        <div>
+        <DateRangePicker
+          startDate={this.state.startDate}
+          startDateId="your_unique_start_date_id"
+          endDate={this.state.endDate}
+          endDateId="your_unique_end_date_id"
+          onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+          focusedInput={this.state.focusedInput}
+          onFocusChange={focusedInput => this.setState({ focusedInput })}
+        />
+        </div>
         <div>
           <LineGraph/>
         </div>
