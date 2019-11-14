@@ -1,10 +1,8 @@
 import React from 'react';
-import {DateRangePicker} from 'react-dates'
-import 'react-dates/lib/css/_datepicker.css';
 import './App.css';
 import BackendAdapter from './backend-adapter.js'
 import LineGraph from './line-graph.js'
-import 'react-dates/initialize';
+import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
 
 class App extends React.Component {
 
@@ -25,8 +23,18 @@ class App extends React.Component {
         isLoading: false,
         startDate: null,
         endDate: null,
+        dates: [new Date(), new Date()],
       });
     });
+  }
+
+  updateDates(dates) {
+    console.log(dates);
+    this.setState({ dates });
+  }
+
+  submitDates() {
+    console.log(`### Filtering for dates: ${this.state.dates}`);
   }
 
   render() {
@@ -34,15 +42,11 @@ class App extends React.Component {
       <div className="App">
         <h1>This is a test app</h1>
         <div>
-          <DateRangePicker
-            startDate={this.state.startDate}
-            startDateId="your_unique_start_date_id"
-            endDate={this.state.endDate}
-            endDateId="your_unique_end_date_id"
-            onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
-            focusedInput={this.state.focusedInput}
-            onFocusChange={focusedInput => this.setState({ focusedInput })}
+          <DateTimeRangePicker
+            onChange={(dates) => this.updateDates.bind(this)(dates)}
+            value={this.state.dates}
           />
+          <button onClick={this.submitDates.bind(this)}>Filter Dates</button>
         </div>
         <div>
           <LineGraph/>
