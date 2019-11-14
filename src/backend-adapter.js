@@ -20,7 +20,18 @@ const BackendAdapter = {
     });
   },
 
-  getFiltered: (filters) => {
+  getFilteredData: (filters) => {
+    if (filters) {
+      const { dates } = filters;
+      const startDatetime = dates[0].toISOString().slice(0, -5);
+      const endDatetime = dates[1].toISOString().slice(0, -5);
+      return fetch(`/metrics?start_datetime=${startDatetime}&end_datetime=${endDatetime}`)
+        .then(res => res.json())
+        .then(res => {
+          console.log(res); return res;
+        });
+    }
+
     return Promise.resolve({
       data: [],
       meta: {

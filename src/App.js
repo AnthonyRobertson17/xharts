@@ -35,6 +35,9 @@ class App extends React.Component {
 
   submitDates() {
     console.log(`### Filtering for dates: ${this.state.dates}`);
+    BackendAdapter.getFilteredData({ dates: this.state.dates }).then(res => {
+      this.setState({ data: res.data });
+    });
   }
 
   render() {
