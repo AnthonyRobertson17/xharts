@@ -2,6 +2,7 @@
   "name": "xharts",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://metrix:8000",
   "dependencies": {
     "@nivo/line": "^0.59.3",
     "@wojtekmaj/react-datetimerange-picker": "^2.3.0",
