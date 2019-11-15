@@ -9,3 +9,8 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
+
+networks:
+  default:
+    external:
+      name: metrix_default
