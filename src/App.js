@@ -17,7 +17,7 @@ class App extends React.Component {
 
   componentDidMount() {
     console.log("Loading Metrics START");
-    BackendAdapter.getAllData().then(res => {
+    BackendAdapter.getInitialData().then(res => {
       console.log("Loading Metrics DONE", res.data);
       this.setState({
         data: res.data,

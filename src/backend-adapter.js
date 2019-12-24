@@ -1,5 +1,5 @@
 const BackendAdapter = {
-  getAllData: () => {
+  getInitialDummyData: () => {
     return Promise.resolve({
       data: [
         {
@@ -148,6 +148,14 @@ const BackendAdapter = {
         page: 0
       }
     });
+  },
+
+  getInitialData: () => {
+    return fetch(`/metrics`)
+      .then(res => res.json())
+      .then(data => {
+        return { data };
+      });
   },
 
   getFilteredData: (filters) => {
