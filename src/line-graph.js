@@ -194,7 +194,7 @@ const MyResponsiveLine = ({ graphData, metricField }) => (
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: `metric field: ${metricField}`,
+      legend: `Metric Field: ${metricField}`,
       legendOffset: -40,
       legendPosition: 'middle'
     }}

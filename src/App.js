@@ -10,7 +10,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       data: [],
-      isLoading: true
+      isLoading: true,
+      metricField: ""
     };
   }
 
@@ -41,6 +42,10 @@ class App extends React.Component {
     });
   }
 
+  handleMetricFieldChange(event) {
+    this.setState({ metricField: event.target.value });
+  }
+
   render() {
     console.log("### APP RENDER");
     return (
@@ -52,9 +57,14 @@ class App extends React.Component {
             value={this.state.dates}
           />
           <button onClick={() => this.submitDates()}>Filter Dates</button>
+          <input
+            value={this.state.metricField}
+            placeholder="Metric Field"
+            onChange={e => this.handleMetricFieldChange(e)}
+          />
         </div>
         <div>
-          <LineGraph data={this.state.data} metricField={"latency"} />
+          <LineGraph data={this.state.data} metricField={this.state.metricField} />
         </div>
       </div>
     );
