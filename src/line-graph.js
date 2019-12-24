@@ -1,302 +1,202 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
 
-const data = [
-  {
-    "id": "japan",
-    "color": "hsl(112, 70%, 50%)",
-    "data": [
-      {
-        "x": "plane",
-        "y": 49
-      },
-      {
-        "x": "helicopter",
-        "y": 252
-      },
-      {
-        "x": "boat",
-        "y": 244
-      },
-      {
-        "x": "train",
-        "y": 231
-      },
-      {
-        "x": "subway",
-        "y": 243
-      },
-      {
-        "x": "bus",
-        "y": 151
-      },
-      {
-        "x": "car",
-        "y": 112
-      },
-      {
-        "x": "moto",
-        "y": 264
-      },
-      {
-        "x": "bicycle",
-        "y": 170
-      },
-      {
-        "x": "horse",
-        "y": 99
-      },
-      {
-        "x": "skateboard",
-        "y": 299
-      },
-      {
-        "x": "others",
-        "y": 219
-      }
-    ]
-  },
-  {
-    "id": "france",
-    "color": "hsl(145, 70%, 50%)",
-    "data": [
-      {
-        "x": "plane",
-        "y": 86
-      },
-      {
-        "x": "helicopter",
-        "y": 171
-      },
-      {
-        "x": "boat",
-        "y": 29
-      },
-      {
-        "x": "train",
-        "y": 171
-      },
-      {
-        "x": "subway",
-        "y": 37
-      },
-      {
-        "x": "bus",
-        "y": 256
-      },
-      {
-        "x": "car",
-        "y": 3
-      },
-      {
-        "x": "moto",
-        "y": 295
-      },
-      {
-        "x": "bicycle",
-        "y": 252
-      },
-      {
-        "x": "horse",
-        "y": 235
-      },
-      {
-        "x": "skateboard",
-        "y": 256
-      },
-      {
-        "x": "others",
-        "y": 69
-      }
-    ]
-  },
-  {
-    "id": "us",
-    "color": "hsl(345, 70%, 50%)",
-    "data": [
-      {
-        "x": "plane",
-        "y": 225
-      },
-      {
-        "x": "helicopter",
-        "y": 23
-      },
-      {
-        "x": "boat",
-        "y": 0
-      },
-      {
-        "x": "train",
-        "y": 216
-      },
-      {
-        "x": "subway",
-        "y": 186
-      },
-      {
-        "x": "bus",
-        "y": 104
-      },
-      {
-        "x": "car",
-        "y": 145
-      },
-      {
-        "x": "moto",
-        "y": 282
-      },
-      {
-        "x": "bicycle",
-        "y": 272
-      },
-      {
-        "x": "horse",
-        "y": 95
-      },
-      {
-        "x": "skateboard",
-        "y": 101
-      },
-      {
-        "x": "others",
-        "y": 67
-      }
-    ]
-  },
-  {
-    "id": "germany",
-    "color": "hsl(293, 70%, 50%)",
-    "data": [
-      {
-        "x": "plane",
-        "y": 245
-      },
-      {
-        "x": "helicopter",
-        "y": 251
-      },
-      {
-        "x": "boat",
-        "y": 55
-      },
-      {
-        "x": "train",
-        "y": 118
-      },
-      {
-        "x": "subway",
-        "y": 23
-      },
-      {
-        "x": "bus",
-        "y": 167
-      },
-      {
-        "x": "car",
-        "y": 47
-      },
-      {
-        "x": "moto",
-        "y": 23
-      },
-      {
-        "x": "bicycle",
-        "y": 118
-      },
-      {
-        "x": "horse",
-        "y": 50
-      },
-      {
-        "x": "skateboard",
-        "y": 100
-      },
-      {
-        "x": "others",
-        "y": 131
-      }
-    ]
-  },
-  {
-    "id": "norway",
-    "color": "hsl(72, 70%, 50%)",
-    "data": [
-      {
-        "x": "plane",
-        "y": 280
-      },
-      {
-        "x": "helicopter",
-        "y": 50
-      },
-      {
-        "x": "boat",
-        "y": 48
-      },
-      {
-        "x": "train",
-        "y": 207
-      },
-      {
-        "x": "subway",
-        "y": 200
-      },
-      {
-        "x": "bus",
-        "y": 209
-      },
-      {
-        "x": "car",
-        "y": 284
-      },
-      {
-        "x": "moto",
-        "y": 218
-      },
-      {
-        "x": "bicycle",
-        "y": 32
-      },
-      {
-        "x": "horse",
-        "y": 260
-      },
-      {
-        "x": "skateboard",
-        "y": 276
-      },
-      {
-        "x": "others",
-        "y": 298
-      }
-    ]
-  }
-];
+function formatMetrics(metrics) {
+  const formatted = {};
+  (metrics.data || []).forEach(metric => {
+    formatted[metric.metric_name] = formatted[metric.metric_name] ||
+      {id: metric.metric_name, data: []};
 
-const MyResponsiveLine = () => (
+    formatted[metric.metric_name].data.push({
+      "x": metric.created_at,
+      "y": metric.data.latency
+    });
+  });
+
+  return Object.keys(formatted).map(metric_name => formatted[metric_name]);
+}
+
+const data = {
+  data: [
+    {
+      "id": 1,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 9,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:38:39.560041",
+      "updated_at": "2019-12-24T17:38:39.560041"
+    },
+    {
+      "id": 2,
+      "metric_name": "dat",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 9,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:39:15.176718",
+      "updated_at": "2019-12-24T17:39:15.176718"
+    },
+    {
+      "id": 3,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 10,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:39:39.376640",
+      "updated_at": "2019-12-24T17:39:39.376640"
+    },
+    {
+      "id": 4,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 3,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:40:42.498604",
+      "updated_at": "2019-12-24T17:40:42.498604"
+    },
+    {
+      "id": 5,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 4,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:41:04.491320",
+      "updated_at": "2019-12-24T17:41:04.491320"
+    },
+    {
+      "id": 6,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 3,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:41:09.888987",
+      "updated_at": "2019-12-24T17:41:09.888987"
+    },
+    {
+      "id": 7,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 8,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:41:13.688332",
+      "updated_at": "2019-12-24T17:41:13.688332"
+    },
+    {
+      "id": 8,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 4,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:41:40.985647",
+      "updated_at": "2019-12-24T17:41:40.985647"
+    },
+    {
+      "id": 9,
+      "metric_name": "dat",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 5,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:41:47.353822",
+      "updated_at": "2019-12-24T17:41:47.353822"
+    },
+    {
+      "id": 10,
+      "metric_name": "who",
+      "data": {
+        "cloud": "gcp",
+        "cluster": "alpha-1",
+        "decimal_revision": 9,
+        "latency": 9,
+        "release": "1911.1.0",
+        "revision": 9
+      },
+      "created_at": "2019-12-24T17:41:58.921534",
+      "updated_at": "2019-12-24T17:41:58.921534"
+    }
+  ],
+  meta: {
+    total: 10,
+    page: 0
+  }
+};
+
+const METRIC_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f";
+const TIME_DISPLAY_FORMAT = "%H:%M:%S";
+
+const MyResponsiveLine = ({ graphData }) => (
   <ResponsiveLine
-    data={data}
+    data={graphData}
     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-    xScale={{ type: 'point' }}
-    yScale={{ type: 'linear', stacked: true, min: 'auto', max: 'auto' }}
+    xScale={{
+      type: 'time',
+      format: METRIC_DATETIME_FORMAT,
+      precision: "second"
+    }}
+    yScale={{
+      type: 'linear',
+      stacked: false,
+      min: 'auto',
+      max: 'auto'
+    }}
+    xFormat={"time:" + TIME_DISPLAY_FORMAT}
     axisTop={null}
     axisRight={null}
     axisBottom={{
-      orient: 'bottom',
-      tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: 'transportation',
-      legendOffset: 36,
-      legendPosition: 'middle'
+      tickSize: 1,
+      legend: 'Time',
+      format: TIME_DISPLAY_FORMAT
     }}
     axisLeft={{
       orient: 'left',
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'count',
+      legend: 'Latency',
       legendOffset: -40,
       legendPosition: 'middle'
     }}
@@ -321,7 +221,7 @@ const MyResponsiveLine = () => (
         itemHeight: 20,
         itemOpacity: 0.75,
         symbolSize: 12,
-        symbolShape: 'circle',
+        symbolShape: 'square',
         symbolBorderColor: 'rgba(0, 0, 0, .5)',
         effects: [
           {
@@ -337,11 +237,12 @@ const MyResponsiveLine = () => (
   />
 );
 
-class LineGraph extends React.Component {
+class LineGraph extends React.PureComponent {
   render() {
+    console.log(formatMetrics(data));
     return (
       <div style={{ height: '400px' }}>
-        <MyResponsiveLine />
+        <MyResponsiveLine graphData={formatMetrics(data)} />
       </div>
     )
   }
