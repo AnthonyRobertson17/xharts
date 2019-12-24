@@ -54,7 +54,7 @@ class App extends React.Component {
           <button onClick={() => this.submitDates()}>Filter Dates</button>
         </div>
         <div>
-          <LineGraph data={this.state.data}/>
+          <LineGraph data={this.state.data} metricField={"latency"} />
         </div>
       </div>
     );

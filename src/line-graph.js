@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
 
-function formatMetrics(metrics) {
+function formatMetrics(metrics, metricField) {
   const formatted = {};
   (metrics || []).forEach(metric => {
     formatted[metric.metric_name] = formatted[metric.metric_name] ||
@@ -9,7 +9,7 @@ function formatMetrics(metrics) {
 
     formatted[metric.metric_name].data.push({
       "x": metric.created_at,
-      "y": metric.data.latency
+      "y": metric.data[metricField] || -1
     });
   });
 
@@ -164,7 +164,7 @@ const dummyData = [
 const METRIC_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f";
 const TIME_DISPLAY_FORMAT = "%H:%M:%S";
 
-const MyResponsiveLine = ({ graphData }) => (
+const MyResponsiveLine = ({ graphData, metricField }) => (
   <ResponsiveLine
     data={graphData}
     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
@@ -185,6 +185,8 @@ const MyResponsiveLine = ({ graphData }) => (
     axisBottom={{
       tickSize: 1,
       legend: 'Time',
+      legendPosition: 'middle',
+      legendOffset: 35,
       format: TIME_DISPLAY_FORMAT
     }}
     axisLeft={{
@@ -192,7 +194,7 @@ const MyResponsiveLine = ({ graphData }) => (
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'Latency',
+      legend: `metric field: ${metricField}`,
       legendOffset: -40,
       legendPosition: 'middle'
     }}
@@ -240,12 +242,12 @@ class LineGraph extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, metricField } = this.props;
     console.log(this.props);
     dummyData && data && console.log(data, formatMetrics(data));
     return (
       <div style={{ height: '400px' }}>
-        <MyResponsiveLine graphData={formatMetrics(data)} />
+        <MyResponsiveLine graphData={formatMetrics(data, metricField)} metricField={metricField} />
       </div>
     )
   }
