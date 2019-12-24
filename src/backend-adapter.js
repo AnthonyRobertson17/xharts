@@ -158,7 +158,7 @@ const BackendAdapter = {
       return fetch(`/metrics?start_datetime=${startDatetime}&end_datetime=${endDatetime}`)
         .then(res => res.json())
         .then(res => {
-          console.log(res); return res;
+          return { data: res };
         });
     }
 

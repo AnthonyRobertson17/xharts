@@ -15,9 +15,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log("START");
+    console.log("Loading Metrics START");
     BackendAdapter.getAllData().then(res => {
-      console.log("DONE", res.data);
+      console.log("Loading Metrics DONE", res.data);
       this.setState({
         data: res.data,
         isLoading: false,
@@ -36,11 +36,13 @@ class App extends React.Component {
   submitDates() {
     console.log(`### Filtering for dates: ${this.state.dates}`);
     BackendAdapter.getFilteredData({ dates: this.state.dates }).then(res => {
+      console.log("Filtering done", res.data);
       this.setState({ data: res.data });
     });
   }
 
   render() {
+    console.log("### APP RENDER");
     return (
       <div className="App">
         <h1>This is a test app</h1>
@@ -49,10 +51,10 @@ class App extends React.Component {
             onChange={(dates) => this.updateDates.bind(this)(dates)}
             value={this.state.dates}
           />
-          <button onClick={this.submitDates.bind(this)}>Filter Dates</button>
+          <button onClick={() => this.submitDates()}>Filter Dates</button>
         </div>
         <div>
-          <LineGraph/>
+          <LineGraph data={this.state.data}/>
         </div>
       </div>
     );
