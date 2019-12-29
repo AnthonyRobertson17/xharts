@@ -1,8 +1,10 @@
 import React from 'react';
 import './App.css';
-import BackendAdapter from './backend-adapter.js'
-import LineGraph from './line-graph.js'
-import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
+import BackendAdapter from './backend-adapter.js';
+import MetricFieldTypeahead from './metric-field-typeahead.js';
+import LineGraph from './line-graph.js';
+import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
 
@@ -57,10 +59,10 @@ class App extends React.Component {
             value={this.state.dates}
           />
           <button onClick={() => this.submitDates()}>Filter Dates</button>
-          <input
+          <MetricFieldTypeahead
+            data={this.state.data}
             value={this.state.metricField}
-            placeholder="Metric Field"
-            onChange={e => this.handleMetricFieldChange(e)}
+            handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
           />
         </div>
         <div>
