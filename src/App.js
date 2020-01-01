@@ -5,6 +5,8 @@ import MetricFieldTypeahead from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
 class App extends React.Component {
 
@@ -52,18 +54,30 @@ class App extends React.Component {
     console.log("### APP RENDER");
     return (
       <div className="App">
-        <h1>This is a test app</h1>
-        <div>
-          <DateTimeRangePicker
-            onChange={(dates) => this.updateDates.bind(this)(dates)}
-            value={this.state.dates}
-          />
-          <button onClick={() => this.submitDates()}>Filter Dates</button>
-          <MetricFieldTypeahead
-            data={this.state.data}
-            value={this.state.metricField}
-            handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
-          />
+        <h1>XHARTS</h1>
+        <div class="container">
+          <ButtonToolbar>
+            <DateTimeRangePicker
+              onChange={(dates) => this.updateDates.bind(this)(dates)}
+              value={this.state.dates}
+            />
+            <Button
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                marginRight: '5px'
+              }}
+              variant="primary"
+              onClick={() => this.submitDates()}
+            >
+              Filter Dates
+            </Button>
+            <MetricFieldTypeahead
+              data={this.state.data}
+              value={this.state.metricField}
+              handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
+            />
+          </ButtonToolbar>
         </div>
         <div>
           <LineGraph data={this.state.data} metricField={this.state.metricField} />

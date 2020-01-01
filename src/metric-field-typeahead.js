@@ -1,11 +1,8 @@
 import React from 'react';
-// import { Typeahead } from 'react-typeahead';
-// import Autosuggest from 'react-autosuggest';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import flattenDeep from 'lodash';
-
-const DEFAULT_OPTIONS = ['John', 'Paul', 'George', 'Ringo'];
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function getKeysFromObj(obj) {
   const results = Object.keys(obj).map(key => {
@@ -32,16 +29,19 @@ function getOptionsFromData(data) {
 class MetricFieldTypeahead extends React.PureComponent {
   render() {
     return (
-      <div style={{ display: "inline-block" }}>
-      <Typeahead
-        onChange={value =>
-          this.props.handleMetricFieldChange({
-            target: { value }
-          })
-        }
-        options={getOptionsFromData(this.props.data)}
-      />
-      </div>
+      <InputGroup>
+        <InputGroup.Prepend>
+          <InputGroup.Text id="basic-addon1">Metric Fieldname</InputGroup.Text>
+        </InputGroup.Prepend>
+        <Typeahead
+          onChange={value =>
+            this.props.handleMetricFieldChange({
+              target: { value }
+            })
+          }
+          options={getOptionsFromData(this.props.data)}
+        />
+      </InputGroup>
     );
   }
 }
