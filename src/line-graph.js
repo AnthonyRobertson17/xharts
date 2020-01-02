@@ -1,15 +1,17 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
+import get from 'lodash/get';
 
 function formatMetrics(metrics, metricField) {
   const formatted = {};
-  (metrics || []).forEach(metric => {
+
+  metrics.forEach(metric => {
     formatted[metric.metric_name] = formatted[metric.metric_name] ||
       {id: metric.metric_name, data: []};
 
     formatted[metric.metric_name].data.push({
       "x": metric.created_at,
-      "y": metric.data[metricField] || -1
+      "y": get(metric.data, metricField, -1)
     });
   });
 

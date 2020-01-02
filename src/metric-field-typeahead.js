@@ -1,13 +1,13 @@
 import React from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import flattenDeep from 'lodash';
+import flattenDeep from 'lodash/flattenDeep';
 import InputGroup from 'react-bootstrap/InputGroup';
 
 function getKeysFromObj(obj) {
   const results = Object.keys(obj).map(key => {
     if (typeof(obj[key]) === "object") {
-      return getKeysFromObj(obj[key]);
+      return getKeysFromObj(obj[key]).map(subKey => `${key}.${subKey}`);
     }
     return key;
   })
@@ -35,9 +35,7 @@ class MetricFieldTypeahead extends React.PureComponent {
         </InputGroup.Prepend>
         <Typeahead
           onChange={value =>
-            this.props.handleMetricFieldChange({
-              target: { value }
-            })
+            this.props.handleMetricFieldChange(value[0])
           }
           options={getOptionsFromData(this.props.data)}
         />

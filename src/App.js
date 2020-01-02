@@ -46,8 +46,8 @@ class App extends React.Component {
     });
   }
 
-  handleMetricFieldChange(event) {
-    this.setState({ metricField: event.target.value });
+  handleMetricFieldChange(metricField) {
+    this.setState({ metricField });
   }
 
   render() {

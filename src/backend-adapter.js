@@ -11,7 +11,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 9,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 1,
+              "compression_factor": {
+                "decimal": 0.23,
+                "percent": 23
+              }
+            }
           },
           "created_at": "2019-12-24T17:38:39.560041",
           "updated_at": "2019-12-24T17:38:39.560041"
@@ -25,7 +32,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 9,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 3,
+              "compression_factor": {
+                "decimal": 1.5,
+                "percent": 150
+              }
+            }
           },
           "created_at": "2019-12-24T17:39:15.176718",
           "updated_at": "2019-12-24T17:39:15.176718"
@@ -39,7 +53,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 10,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 2,
+              "compression_factor": {
+                "decimal": 1.5,
+                "percent": 150
+              }
+            }
           },
           "created_at": "2019-12-24T17:39:39.376640",
           "updated_at": "2019-12-24T17:39:39.376640"
@@ -53,7 +74,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 3,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 7,
+            "vendor": {
+              "jitter": 6,
+              "compression_factor": {
+                "decimal": 0.5,
+                "percent": 50
+              }
+            }
           },
           "created_at": "2019-12-24T17:40:42.498604",
           "updated_at": "2019-12-24T17:40:42.498604"
@@ -67,7 +95,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 4,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 11,
+              "compression_factor": {
+                "decimal": 1.12,
+                "percent": 112
+              }
+            }
           },
           "created_at": "2019-12-24T17:41:04.491320",
           "updated_at": "2019-12-24T17:41:04.491320"
@@ -81,7 +116,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 3,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 11,
+              "compression_factor": {
+                "decimal": 1.5,
+                "percent": 150
+              }
+            }
           },
           "created_at": "2019-12-24T17:41:09.888987",
           "updated_at": "2019-12-24T17:41:09.888987"
@@ -95,7 +137,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 8,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 10,
+              "compression_factor": {
+                "decimal": 1.33,
+                "percent": 133
+              }
+            }
           },
           "created_at": "2019-12-24T17:41:13.688332",
           "updated_at": "2019-12-24T17:41:13.688332"
@@ -109,7 +158,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 4,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 7,
+              "compression_factor": {
+                "decimal": 0.5,
+                "percent": 50
+              }
+            }
           },
           "created_at": "2019-12-24T17:41:40.985647",
           "updated_at": "2019-12-24T17:41:40.985647"
@@ -123,7 +179,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 5,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 7,
+              "compression_factor": {
+                "decimal": 0.4,
+                "percent": 40
+              }
+            }
           },
           "created_at": "2019-12-24T17:41:47.353822",
           "updated_at": "2019-12-24T17:41:47.353822"
@@ -137,7 +200,14 @@ const BackendAdapter = {
             "decimal_revision": 9,
             "latency": 9,
             "release": "1911.1.0",
-            "revision": 9
+            "revision": 9,
+            "vendor": {
+              "jitter": 3,
+              "compression_factor": {
+                "decimal": 0.43,
+                "percent": 43
+              }
+            }
           },
           "created_at": "2019-12-24T17:41:58.921534",
           "updated_at": "2019-12-24T17:41:58.921534"
