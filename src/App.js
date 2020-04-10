@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import BackendAdapter from './backend-adapter.js';
+import AddCharts from './add-charts.js';
 import MetricFieldTypeahead from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
@@ -17,7 +18,8 @@ class App extends React.Component {
       data: [],
       isLoading: true,
       metricField: "",
-      countData: {}
+      countData: {},
+      metricNames: []
     };
   }
 
@@ -116,6 +118,9 @@ class App extends React.Component {
           <LineGraph data={this.state.data} metricField={this.state.metricField} />
         </div>
         <div className="container">
+          <div className="row m-2">
+            <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} />
+          </div>
           <div className="row">
             <SingleMetricChart type={"count"} data={this.state.countData.buckets} />
             <SingleMetricChart type={"count"} data={[6]} />
