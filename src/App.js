@@ -50,12 +50,15 @@ class App extends React.Component {
     }, {});
   }
 
+  getQueryParams() {
+    console.log("query params", window.location.search);
+    return this.parseQueryParams(window.location.search.slice(1));
+  }
+
   componentDidMount() {
     console.log("Loading Metrics START");
 
-    console.log("query params", window.location.search);
-
-    const params = this.parseQueryParams(window.location.search.slice(1));
+    const params = this.getQueryParams();
 
     console.log("query params", params);
 
@@ -76,27 +79,38 @@ class App extends React.Component {
     });
 
     this.state.charts.map((chartParams, idx) => {
-      console.log("loading chartParams", chartParams);
-      const chartQueryParams = { ...params, ...chartParams };
-      BackendAdapter.queryCount(params).then(res => {
-        console.log("Loading Count DONE", res.data);
-        const chartDataEntry = {
-          metricType: chartParams.metricType,
-          metricName: chartParams.metricName,
-          data: res.data
-        };
+      this.refreshChartAtIdx({ idx, chartParams }, params);
+    });
+  }
 
-        this.setState(prevState => {
-          let newChartData = [...prevState.chartData];
-          newChartData[idx] = chartDataEntry;
+  refreshChartAtIdx({ idx, chartParams }, params) {
+    params =  params || this.getQueryParams();
 
-          return {
-            ...prevState,
-            chartData: newChartData
-          }
-        });
+    const chartQueryParams = { ...params, ...chartParams };
+
+    if (idx >= this.state.chartData.length) console.warn("this is a race condition...");
+
+    BackendAdapter.queryCount(chartQueryParams).then(res => {
+      console.log("Loading Count DONE", res.data);
+      const chartDataEntry = {
+        metricType: chartParams.metricType,
+        metricName: chartParams.metricName,
+        data: res.data
+      };
+
+      this.setState(prevState => {
+        let newChartData = [...prevState.chartData];
+
+        if (idx >= newChartData.length) console.error("this is undefined territory", newChartData);
+
+        newChartData[idx] = chartDataEntry;
+
+        return {
+          ...prevState,
+          chartData: newChartData
+        }
       });
-    })
+    });
   }
 
   updateDates(dates) {
@@ -130,19 +144,20 @@ class App extends React.Component {
   }
 
   handleNewChart({ newMetricType, newMetricName }) {
-    console.log("adding new Chart", { metricType: newMetricType, metricName: newMetricName });
+    const newChart = { metricType: newMetricType, metricName: newMetricName };
+    console.log("adding new Chart", newChart);
     this.setState(prevState => ({
       ...prevState,
-      charts: [...prevState.charts, { metricType: newMetricType, metricName: newMetricName }],
+      charts: [...prevState.charts, newChart],
+      chartData: [...prevState.chartData, 0],
     }));
 
     let charts = JSON.parse(window.localStorage.getItem("charts"));
-    charts.push({
-      metricType: newMetricType, metricName: newMetricName
-    });
+    charts.push(newChart);
     window.localStorage.setItem("charts", JSON.stringify(charts));
 
     // async load chart data
+    this.refreshChartAtIdx({ idx: charts.length - 1, chartParams: newChart });
   }
 
   render() {
