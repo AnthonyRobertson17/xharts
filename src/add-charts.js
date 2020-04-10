@@ -13,11 +13,11 @@ import Button from 'react-bootstrap/Button';
 // }
 
 const getTypeOptions = (types) => {
-  return ["count", "max", "avg", "min"];
+  return types.map((label, id) => ({ id, label }));
 }
 
 const getMetricOptions = (data) => {
-  return ["version", "latency"];
+  return data.map((label, id) => ({ id, label }));
 }
 
 class AddCharts extends React.Component {
@@ -25,6 +25,17 @@ class AddCharts extends React.Component {
   state = {
     newMetricType: "",
     newMetricName: ""
+  }
+
+  handleNewChart = () => {
+    console.log({
+      newMetricType: this.state.newMetricType.label,
+      newMetricName: this.state.newMetricName.label
+    });
+    this.props.handleNewChart({
+      newMetricType: this.state.newMetricType.label,
+      newMetricName: this.state.newMetricName.label
+    });
   }
 
   render() {
@@ -36,20 +47,20 @@ class AddCharts extends React.Component {
               onChange={value =>
                 this.setState({ newMetricType: value[0] })
               }
-              options={getTypeOptions(this.props.types)}
+              options={console.log(this.props) || getTypeOptions(this.props.types)}
             />
           </InputGroup.Prepend>
           <Typeahead
             onChange={value =>
               this.setState({ newMetricName: value[0] })
             }
-            options={getMetricOptions(this.props.types)}
+            options={getMetricOptions(this.props.metricNames)}
           />
           <InputGroup.Append>
             <Button
               variant="primary"
               disabled={!this.state.newMetricType || !this.state.newMetricName}
-              onClick={() => console.log(this.state.newMetricType, this.state.newMetricName)}
+              onClick={() => this.handleNewChart()}
             >
               Add Metric
             </Button>

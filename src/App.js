@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import BackendAdapter from './backend-adapter.js';
 import AddCharts from './add-charts.js';
-import MetricFieldTypeahead from './metric-field-typeahead.js';
+import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
@@ -12,14 +12,33 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
 class App extends React.Component {
 
+  chartTypes = ["count", "max", "avg", "min"]
+
   constructor(props) {
     super(props);
+
+    const chartsJson = window.localStorage.getItem("charts");
+    let charts = [];
+
+    console.log("chartsJson", chartsJson);
+    try {
+      let chartsTemp = JSON.parse(chartsJson);
+      console.log("chartsTemp.length", chartsTemp.length);
+      charts = chartsTemp;
+    } catch (e) {
+      console.error("woa, charts could not be retrieved due to malformed JSON...", chartsJson);
+      console.log("resetting chartsJson");
+      window.localStorage.setItem("charts", "[]");
+    }
+
     this.state = {
       data: [],
       isLoading: true,
       metricField: "",
       countData: {},
-      metricNames: []
+      metricNames: [],
+      charts: charts,
+      chartData: new Array(charts.length).fill(0)
     };
   }
 
@@ -42,6 +61,9 @@ class App extends React.Component {
 
     BackendAdapter.getFilteredData(params).then(res => {
       console.log("Loading Metrics DONE", res.data);
+
+      let metricNames = getMetricNamesFromData(res.data);
+
       this.setState({
         data: res.data,
         isLoading: false,
@@ -49,13 +71,32 @@ class App extends React.Component {
           new Date(params.start_datetime || Date()),
           new Date(params.end_datetime || Date())
         ],
+        metricNames
       });
     });
 
-    BackendAdapter.queryCount(params).then(res => {
-      console.log("Loading Count DONE", res.data);
-      this.setState({ countData: res.data });
-    });
+    this.state.charts.map((chartParams, idx) => {
+      console.log("loading chartParams", chartParams);
+      const chartQueryParams = { ...params, ...chartParams };
+      BackendAdapter.queryCount(params).then(res => {
+        console.log("Loading Count DONE", res.data);
+        const chartDataEntry = {
+          metricType: chartParams.metricType,
+          metricName: chartParams.metricName,
+          data: res.data
+        };
+
+        this.setState(prevState => {
+          let newChartData = [...prevState.chartData];
+          newChartData[idx] = chartDataEntry;
+
+          return {
+            ...prevState,
+            chartData: newChartData
+          }
+        });
+      });
+    })
   }
 
   updateDates(dates) {
@@ -77,7 +118,10 @@ class App extends React.Component {
 
     BackendAdapter.getFilteredData({ dates: this.state.dates }).then(res => {
       console.log("Filtering done", res.data);
-      this.setState({ data: res.data });
+
+      let metricNames = getMetricNamesFromData(res.data);
+
+      this.setState({ data: res.data, metricNames });
     });
   }
 
@@ -85,8 +129,24 @@ class App extends React.Component {
     this.setState({ metricField });
   }
 
+  handleNewChart({ newMetricType, newMetricName }) {
+    console.log("adding new Chart", { metricType: newMetricType, metricName: newMetricName });
+    this.setState(prevState => ({
+      ...prevState,
+      charts: [...prevState.charts, { metricType: newMetricType, metricName: newMetricName }],
+    }));
+
+    let charts = JSON.parse(window.localStorage.getItem("charts"));
+    charts.push({
+      metricType: newMetricType, metricName: newMetricName
+    });
+    window.localStorage.setItem("charts", JSON.stringify(charts));
+
+    // async load chart data
+  }
+
   render() {
-    console.log("### APP RENDER");
+    console.log("### APP RENDER", this.chartTypes);
     return (
       <div className="App">
         <h1>XHARTS</h1>
@@ -119,16 +179,12 @@ class App extends React.Component {
         </div>
         <div className="container">
           <div className="row m-2">
-            <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} />
+            <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
           </div>
           <div className="row">
-            <SingleMetricChart type={"count"} data={this.state.countData.buckets} />
-            <SingleMetricChart type={"count"} data={[6]} />
-            <SingleMetricChart type={"count"} data={[9]} />
-            <SingleMetricChart type={"count"} data={[9]} />
-            <SingleMetricChart type={"count"} data={[9]} />
-            <SingleMetricChart type={"count"} data={[9]} />
-            <SingleMetricChart type={"count"} data={[9]} />
+            {this.state.chartData.map(chart =>
+              <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} />
+            )}
           </div>
         </div>
         <div style={{height: 150}}></div>
