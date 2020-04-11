@@ -52,7 +52,10 @@ class App extends React.Component {
 
   getQueryParams() {
     console.log("query params", window.location.search);
-    return this.parseQueryParams(window.location.search.slice(1));
+    let params = this.parseQueryParams(window.location.search.slice(1));
+    params.startDatetime = params.start_datetime;
+    params.endDatetime = params.end_datetime;
+    return params;
   }
 
   componentDidMount() {

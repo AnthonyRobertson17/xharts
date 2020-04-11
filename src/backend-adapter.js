@@ -236,7 +236,7 @@ const BackendAdapter = {
     if (filters.mock) return Promise.resolve(dummyData);
 
     const { startDatetime, endDatetime } = filters;
-    let url = "/metrics"
+    let url = "/metrics";
 
     if (startDatetime || endDatetime) {
       let params = new URLSearchParams();
@@ -258,14 +258,27 @@ const BackendAdapter = {
     if (filters.mock) {
       return Promise.resolve({
         data: {
-          buckets: [
-            Math.floor(Math.random() * 100)
-          ]
+          buckets: [{
+            value: Math.floor(Math.random() * 100),
+            bucket: "random bucket name"
+          }]
         }
       });
     }
 
-    return fetch(`/metrics/count?start_datetime=xxx&end_datetime=xxx&query=xxxxxxx&bucket_count=1`)
+    const { startDatetime, endDatetime } = filters;
+    let url = '/metrics/count?bucket_count=1';
+
+    if (startDatetime || endDatetime) {
+      let params = new URLSearchParams();
+
+      startDatetime && params.set('start_datetime', startDatetime);
+      endDatetime && params.set('end_datetime', endDatetime);
+
+      url += "&" + params.toString();
+    }
+
+    return fetch(url)
       .then(res => res.json());
   }
 };

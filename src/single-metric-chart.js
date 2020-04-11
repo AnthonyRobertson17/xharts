@@ -12,7 +12,7 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
           <i class="fa fa-times" aria-hidden="true"></i>
         </span>
         <div className="card-body">
-          <h1>{data && data.length === 1 ? data[0] : "Loading..."}</h1>
+          <h1>{data && data.length === 1 ? data[0].value : "Loading..."}</h1>
           <small>
             <strong>{type}</strong>
             {" chart for "}
