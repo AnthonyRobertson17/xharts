@@ -219,20 +219,21 @@ const dummyData = {
 
 const dateToQuery = (date) => date.toISOString().slice(0, -5);
 
-const BackendAdapter = {
-  getInitialDummyData: () => {
-    return Promise.resolve(dummyData);
-  },
+class BackendAdapter {
 
-  getInitialData: () => {
+  getInitialDummyData() {
+    return Promise.resolve(dummyData);
+  }
+
+  getInitialData() {
     return fetch(`/metrics`)
       .then(res => res.json())
       .then(data => {
         return { data };
       });
-  },
+  }
 
-  getFilteredData: (filters) => {
+  getFilteredData(filters) {
     if (filters.mock) return Promise.resolve(dummyData);
 
     const { startDatetime, endDatetime } = filters;
@@ -252,9 +253,26 @@ const BackendAdapter = {
       .then(data => {
         return { data };
       });
-  },
+  }
 
-  queryCount: (filters) => {
+  query(filters) {
+    const { startDatetime, endDatetime, metricName, metricType } = filters;
+    let url = `/metrics/${metricType}?`;
+
+    let params = new URLSearchParams();
+
+    params.set('start_datetime', startDatetime);
+    params.set('end_datetime', endDatetime);
+    params.set('metric_name', metricName);
+    params.set('bucket_count', 1);
+
+    url += "&" + params.toString();
+
+    return fetch(url)
+      .then(res => res.json());
+  }
+
+  queryCount(filters) {
     if (filters.mock) {
       return Promise.resolve({
         data: {
@@ -266,23 +284,10 @@ const BackendAdapter = {
       });
     }
 
-    const { startDatetime, endDatetime } = filters;
-    let url = '/metrics/count?bucket_count=1';
-
-    if (startDatetime || endDatetime) {
-      let params = new URLSearchParams();
-
-      startDatetime && params.set('start_datetime', startDatetime);
-      endDatetime && params.set('end_datetime', endDatetime);
-
-      url += "&" + params.toString();
-    }
-
-    return fetch(url)
-      .then(res => res.json());
+    return this.query({ ...filters, metricType: "count" });
   }
 };
 
-export default BackendAdapter;
+export default new BackendAdapter();
 
 export { dateToQuery };

@@ -81,7 +81,7 @@ class App extends React.Component {
       });
     });
 
-    this.state.charts.map((chartParams, idx) => {
+    this.state.charts.forEach((chartParams, idx) => {
       this.refreshChartAtIdx({ idx, chartParams }, params);
     });
   }
