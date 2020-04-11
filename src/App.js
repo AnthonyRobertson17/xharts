@@ -213,7 +213,7 @@ class App extends React.Component {
           </ButtonToolbar>
         </div>
         <div className="container">
-          <LineGraph data={this.state.data} metricField={this.state.metricField} />
+          {true && <LineGraph data={this.state.data} metricField={this.state.metricField} />}
         </div>
         <div className="container">
           <div className="row m-2">
@@ -221,7 +221,7 @@ class App extends React.Component {
           </div>
           <div className="row">
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
-              (!chart.metricAggregationType || chart.metricAggregationType === AGGREGATION_TYPE_SINGLE) ?
+              chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
                 <SingleMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
                 : <TimeseriesMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}

@@ -219,6 +219,49 @@ const dummyData = {
   }
 };
 
+const manyBuckets = () => [
+  {
+    "value": 0,
+    "bucket": "2019-12-24T17:38:00"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:38:24"
+  },
+  {
+    "value": 0,
+    "bucket": "2019-12-24T17:38:48"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:39:12"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:39:36"
+  },
+  {
+    "value": 0,
+    "bucket": "2019-12-24T17:40:00"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:40:24"
+  },
+  {
+    "value": 2,
+    "bucket": "2019-12-24T17:40:48"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:41:12"
+  },
+  {
+    "value": 3,
+    "bucket": "2019-12-24T17:41:36"
+  }
+];
+
 const dateToQuery = (date) => date.toISOString().slice(0, -5);
 
 class BackendAdapter {
@@ -266,7 +309,7 @@ class BackendAdapter {
     params.set('start_datetime', startDatetime);
     params.set('end_datetime', endDatetime);
     params.set('metric_name', metricName);
-    params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 25);
+    params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 10);
 
     url += "&" + params.toString();
 
@@ -278,10 +321,10 @@ class BackendAdapter {
     if (filters.mock) {
       return Promise.resolve({
         data: {
-          buckets: [{
+          buckets: filters.metricAggregationType === AGGREGATION_TYPE_SINGLE ? [{
             value: Math.floor(Math.random() * 100),
             bucket: "random bucket name"
-          }]
+          }] : manyBuckets()
         }
       });
     }
