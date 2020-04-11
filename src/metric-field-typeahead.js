@@ -45,3 +45,5 @@ class MetricFieldTypeahead extends React.PureComponent {
 }
 
 export default MetricFieldTypeahead;
+
+export { getOptionsFromData as getMetricNamesFromData };
