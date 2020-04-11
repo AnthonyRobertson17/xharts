@@ -30,7 +30,7 @@ const MyResponsiveLine = ({ data, yAxisLabel, xFormatter }) => (
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 270,
-      legend: 'Time/Bucket',
+      legend: 'time/bucket',
       legendOffset: 26,
       legendPosition: 'middle'
     }}
@@ -51,6 +51,8 @@ const MyResponsiveLine = ({ data, yAxisLabel, xFormatter }) => (
     pointLabel="y"
     pointLabelYOffset={-12}
     useMesh={true}
+    enableGridX={false}
+    // enableGridY={false}
   />
 );
 
@@ -73,15 +75,19 @@ const graphWrapper = (data) => {
   if (lastIdx === false) lastIdx = data.data[0].bucket.length - 6;
 
   return (
-    <div style={{minHeight: "300px", height: "300px"}}>
-      <MyResponsiveLine data={prepareData([data])} yAxisLabel={`${data.type} for ${data.id}`} xFormatter={(val) => val.slice(lastIdx)} />
+    <div style={{minHeight: "150px", height: "150px"}}>
+      <MyResponsiveLine
+        data={prepareData([data])}
+        yAxisLabel={`${data.type} for ${data.id}`}
+        xFormatter={(val) => val.slice(lastIdx)}
+      />
     </div>
   );
 };
 
 export default ({ type, metricName, data, handleRemovingChart }) => {
   return (
-    <div className="col-md-4 mb-4">
+    <div className="col-md-6 mb-4">
       <div className="card">
         <span
           style={{textAlign: "right", cursor: "pointer"}}
