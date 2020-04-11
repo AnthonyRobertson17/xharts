@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
 import { default as BackendAdapter, dateToQuery } from './backend-adapter.js';
-import AddCharts from './add-charts.js';
+import { default as AddCharts, AGGREGATION_TYPE_SINGLE } from './add-charts.js';
 import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
+import TimeseriesMetricChart from './timeseries-metric-chart.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
@@ -51,7 +53,6 @@ class App extends React.Component {
   }
 
   getQueryParams() {
-    console.log("query params", window.location.search);
     let params = this.parseQueryParams(window.location.search.slice(1));
     params.startDatetime = params.start_datetime;
     params.endDatetime = params.end_datetime;
@@ -59,29 +60,30 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Loading Metrics START");
+    this.refreshAll();
+  }
 
+  refreshAll() {
     const params = this.getQueryParams();
 
-    console.log("query params", params);
+    console.log("refreshAll w/ query params:", params);
 
     BackendAdapter.getFilteredData(params).then(res => {
-      console.log("Loading Metrics DONE", res.data);
-
       let metricNames = getMetricNamesFromData(res.data);
 
       this.setState({
         data: res.data,
         isLoading: false,
         dates: [
-          new Date(params.start_datetime || Date()),
-          new Date(params.end_datetime || Date())
+          new Date(params.start_datetime + "Z" || Date()),
+          new Date(params.end_datetime + "Z" || Date())
         ],
+        metricField: params.q || "",
         metricNames
       });
     });
 
-    this.state.charts.map((chartParams, idx) => {
+    this.state.charts.forEach((chartParams, idx) => {
       this.refreshChartAtIdx({ idx, chartParams }, params);
     });
   }
@@ -97,6 +99,7 @@ class App extends React.Component {
       const chartDataEntry = {
         metricType: chartParams.metricType,
         metricName: chartParams.metricName,
+        metricAggregationType: chartParams.metricAggregationType,
         data: res.data
       };
 
@@ -127,26 +130,31 @@ class App extends React.Component {
 
     // the pushedState isn't utilized by the app yet...but it _could_ be
     window.history.pushState(
-      { startDatetime, endDatetime },
+      { startDatetime, endDatetime, q: this.state.metricField },
       "XHARTS",
-      `?start_datetime=${startDatetime}&end_datetime=${endDatetime}`
+      `?start_datetime=${startDatetime}&end_datetime=${endDatetime}${this.state.metricField ? "&q=" + this.state.metricField : ""}`
     );
 
-    BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
-      console.log("Filtering done", res.data);
+    // BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
+    //   console.log("Filtering done", res.data);
 
-      let metricNames = getMetricNamesFromData(res.data);
+    //   let metricNames = getMetricNamesFromData(res.data);
 
-      this.setState({ data: res.data, metricNames });
-    });
+    //   this.setState({ data: res.data, metricNames });
+    // });
+    this.refreshAll();
   }
 
   handleMetricFieldChange(metricField) {
     this.setState({ metricField });
   }
 
-  handleNewChart({ newMetricType, newMetricName }) {
-    const newChart = { metricType: newMetricType, metricName: newMetricName };
+  handleNewChart({ newMetricType, newMetricName, newMetricAggregationType }) {
+    const newChart = {
+      metricType: newMetricType,
+      metricName: newMetricName,
+      metricAggregationType: newMetricAggregationType
+    };
     console.log("adding new Chart", newChart);
     this.setState(prevState => ({
       ...prevState,
@@ -158,7 +166,6 @@ class App extends React.Component {
     charts.push(newChart);
     window.localStorage.setItem("charts", JSON.stringify(charts));
 
-    // async load chart data
     this.refreshChartAtIdx({ idx: charts.length - 1, chartParams: newChart });
   }
 
@@ -178,47 +185,64 @@ class App extends React.Component {
   }
 
   render() {
-    console.log("### APP RENDER", this.chartTypes);
     return (
       <div className="App">
-        <h1>XHARTS</h1>
+        <Navbar bg="light">
+          <Navbar.Brand href="/">Metrix/Xharts</Navbar.Brand>
+        </Navbar>
+
         <div className="container">
-          <ButtonToolbar>
-            <DateTimeRangePicker
-              onChange={(dates) => this.updateDates.bind(this)(dates)}
-              value={this.state.dates}
-            />
-            <Button
-              style={{
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-                marginRight: '5px'
-              }}
-              variant="primary"
-              onClick={() => this.submitDates()}
-            >
-              Filter Dates
-            </Button>
-            <MetricFieldTypeahead
-              data={this.state.data}
-              value={this.state.metricField}
-              handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
-            />
-          </ButtonToolbar>
+          <div className="row my-4">
+            <ButtonToolbar>
+              <DateTimeRangePicker
+                onChange={(dates) => this.updateDates.bind(this)(dates)}
+                value={this.state.dates}
+              />
+              <Button
+                style={{
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  marginRight: '5px'
+                }}
+                variant="primary"
+                onClick={() => this.submitDates()}
+              >
+                <i className="fa fa-check" aria-hidden="true"></i>
+              </Button>
+              <MetricFieldTypeahead
+                data={this.state.data}
+                value={this.state.metricField}
+                handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
+              />
+            </ButtonToolbar>
+          </div>
         </div>
+
         <div className="container">
-          <LineGraph data={this.state.data} metricField={this.state.metricField} />
+          <div className="row">
+            <h1>At a Glance</h1>
+          </div>
+          {true && <LineGraph data={this.state.data} metricField={this.state.metricField} />}
         </div>
+
         <div className="container">
+          <div className="row">
+            <h1>Dashboard</h1>
+          </div>
+
           <div className="row m-2">
             <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
           </div>
+
           <div className="row">
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
-              <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+              chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
+                <SingleMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+                : <TimeseriesMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
           </div>
         </div>
+
         <div style={{height: 150}}></div>
       </div>
     );

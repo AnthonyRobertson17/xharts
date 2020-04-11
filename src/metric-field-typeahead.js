@@ -17,12 +17,11 @@ function getKeysFromObj(obj) {
 
 function getOptionsFromData(data) {
   const options = new Set();
-  console.log("getOptionsFromData", data);
+
   data.forEach(metric => {
     getKeysFromObj(metric.data).forEach(k => options.add(k));
   });
 
-  console.log(Array.from(options));
   return Array.from(options);
 }
 
@@ -31,12 +30,15 @@ class MetricFieldTypeahead extends React.PureComponent {
     return (
       <InputGroup>
         <InputGroup.Prepend>
-          <InputGroup.Text id="basic-addon1">Metric Fieldname</InputGroup.Text>
+          <InputGroup.Text id="basic-addon1">Metric name</InputGroup.Text>
         </InputGroup.Prepend>
         <Typeahead
+          id="main-chart-metric-field-typeahead"
           onChange={value =>
             this.props.handleMetricFieldChange(value[0])
           }
+          clearButton
+          selected={[this.props.value || ""]}
           options={getOptionsFromData(this.props.data)}
         />
       </InputGroup>

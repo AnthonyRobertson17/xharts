@@ -1,3 +1,5 @@
+import { AGGREGATION_TYPE_SINGLE, AGGREGATION_TYPE_TIMESERIES } from './add-charts.js';
+
 const dummyData = {
   data: [
     {
@@ -217,22 +219,66 @@ const dummyData = {
   }
 };
 
+const manyBuckets = () => [
+  {
+    "value": 0,
+    "bucket": "2019-12-24T17:38:00"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:38:24"
+  },
+  {
+    "value": 0,
+    "bucket": "2019-12-24T17:38:48"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:39:12"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:39:36"
+  },
+  {
+    "value": 0,
+    "bucket": "2019-12-24T17:40:00"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:40:24"
+  },
+  {
+    "value": 2,
+    "bucket": "2019-12-24T17:40:48"
+  },
+  {
+    "value": 1,
+    "bucket": "2019-12-24T17:41:12"
+  },
+  {
+    "value": 3,
+    "bucket": "2019-12-24T17:41:36"
+  }
+];
+
 const dateToQuery = (date) => date.toISOString().slice(0, -5);
 
-const BackendAdapter = {
-  getInitialDummyData: () => {
-    return Promise.resolve(dummyData);
-  },
+class BackendAdapter {
 
-  getInitialData: () => {
+  getInitialDummyData() {
+    return Promise.resolve(dummyData);
+  }
+
+  getInitialData() {
     return fetch(`/metrics`)
       .then(res => res.json())
       .then(data => {
         return { data };
       });
-  },
+  }
 
-  getFilteredData: (filters) => {
+  getFilteredData(filters) {
     if (filters.mock) return Promise.resolve(dummyData);
 
     const { startDatetime, endDatetime } = filters;
@@ -252,37 +298,42 @@ const BackendAdapter = {
       .then(data => {
         return { data };
       });
-  },
+  }
 
-  queryCount: (filters) => {
+  query(filters) {
+    const { startDatetime, endDatetime, metricName, metricType, metricAggregationType } = filters;
+    let url = `/metrics/${metricType}?`;
+
+    let params = new URLSearchParams();
+
+    params.set('start_datetime', startDatetime);
+    params.set('end_datetime', endDatetime);
+    params.set('metric_name', metricName);
+    params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 10);
+
+    url += params.toString();
+
+    return fetch(url)
+      .then(res => res.json())
+      .then(res => console.log("response", res) || res);
+  }
+
+  queryCount(filters) {
     if (filters.mock) {
       return Promise.resolve({
         data: {
-          buckets: [{
+          buckets: filters.metricAggregationType === AGGREGATION_TYPE_SINGLE ? [{
             value: Math.floor(Math.random() * 100),
             bucket: "random bucket name"
-          }]
+          }] : manyBuckets()
         }
       });
     }
 
-    const { startDatetime, endDatetime } = filters;
-    let url = '/metrics/count?bucket_count=1';
-
-    if (startDatetime || endDatetime) {
-      let params = new URLSearchParams();
-
-      startDatetime && params.set('start_datetime', startDatetime);
-      endDatetime && params.set('end_datetime', endDatetime);
-
-      url += "&" + params.toString();
-    }
-
-    return fetch(url)
-      .then(res => res.json());
+    return this.query({ ...filters, metricType: "count" });
   }
 };
 
-export default BackendAdapter;
+export default new BackendAdapter();
 
 export { dateToQuery };

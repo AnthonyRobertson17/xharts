@@ -2,7 +2,7 @@ import React from 'react';
 
 export default ({ type, metricName, data, handleRemovingChart }) => {
   return (
-    <div className="col-md-4 mb-4">
+    <div className="col-md-6 mb-4">
       <div className="card">
         <span
           style={{textAlign: "right", cursor: "pointer"}}
@@ -15,7 +15,7 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
           <h1>{data && data.length === 1 ? data[0].value : "Loading..."}</h1>
           <small>
             <strong>{type}</strong>
-            {" chart for "}
+            {" card for "}
             <strong>{metricName}</strong>
           </small>
         </div>

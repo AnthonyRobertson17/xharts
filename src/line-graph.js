@@ -15,9 +15,7 @@ function formatMetrics(metrics, metricField) {
     });
   });
 
-  const results = Object.keys(formatted).map(metric_name => formatted[metric_name]);
-  console.log(results);
-  return results;
+  return Object.keys(formatted).map(metric_name => formatted[metric_name]);
 }
 
 const METRIC_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f";
