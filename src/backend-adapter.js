@@ -254,7 +254,7 @@ const BackendAdapter = {
       return Promise.resolve({
         data: {
           buckets: [
-            12
+            Math.floor(Math.random() * 100)
           ]
         }
       });
