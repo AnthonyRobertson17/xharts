@@ -17,12 +17,11 @@ function getKeysFromObj(obj) {
 
 function getOptionsFromData(data) {
   const options = new Set();
-  console.log("getOptionsFromData", data);
+
   data.forEach(metric => {
     getKeysFromObj(metric.data).forEach(k => options.add(k));
   });
 
-  console.log("metric-field-typeahead options", Array.from(options));
   return Array.from(options);
 }
 

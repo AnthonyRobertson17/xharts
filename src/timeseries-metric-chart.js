@@ -56,16 +56,13 @@ const MyResponsiveLine = ({ data, yAxisLabel, xFormatter }) => (
   />
 );
 
-const prepareData = (ndata) => {
-  const processed = ndata.map(datum => ({
+const prepareData = (rawData) => {
+  return rawData.map(datum => ({
     ...datum,
     data: datum.data.map(bucket =>
       ({ x: bucket.bucket, y: bucket.value })
     )
   }));
-
-  console.log("prepareData", processed);
-  return processed;
 };
 
 const graphWrapper = (data) => {

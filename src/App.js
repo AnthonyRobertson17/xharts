@@ -53,7 +53,6 @@ class App extends React.Component {
   }
 
   getQueryParams() {
-    console.log("query params", window.location.search);
     let params = this.parseQueryParams(window.location.search.slice(1));
     params.startDatetime = params.start_datetime;
     params.endDatetime = params.end_datetime;
@@ -61,15 +60,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Loading Metrics START");
+    this.refreshAll();
+  }
 
+  refreshAll() {
     const params = this.getQueryParams();
 
-    console.log("query params", params);
+    console.log("refreshAll w/ query params:", params);
 
     BackendAdapter.getFilteredData(params).then(res => {
-      console.log("Loading Metrics DONE", res.data);
-
       let metricNames = getMetricNamesFromData(res.data);
 
       this.setState({
@@ -131,18 +130,19 @@ class App extends React.Component {
 
     // the pushedState isn't utilized by the app yet...but it _could_ be
     window.history.pushState(
-      { startDatetime, endDatetime },
+      { startDatetime, endDatetime, q: this.state.metricField },
       "XHARTS",
-      `?start_datetime=${startDatetime}&end_datetime=${endDatetime}&q=${this.state.metricField || ""}`
+      `?start_datetime=${startDatetime}&end_datetime=${endDatetime}${this.state.metricField ? "&q=" + this.state.metricField : ""}`
     );
 
-    BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
-      console.log("Filtering done", res.data);
+    // BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
+    //   console.log("Filtering done", res.data);
 
-      let metricNames = getMetricNamesFromData(res.data);
+    //   let metricNames = getMetricNamesFromData(res.data);
 
-      this.setState({ data: res.data, metricNames });
-    });
+    //   this.setState({ data: res.data, metricNames });
+    // });
+    this.refreshAll();
   }
 
   handleMetricFieldChange(metricField) {
@@ -166,7 +166,6 @@ class App extends React.Component {
     charts.push(newChart);
     window.localStorage.setItem("charts", JSON.stringify(charts));
 
-    // async load chart data
     this.refreshChartAtIdx({ idx: charts.length - 1, chartParams: newChart });
   }
 
@@ -186,7 +185,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log("### APP RENDER", this.chartTypes);
     return (
       <div className="App">
         <Navbar bg="light">
