@@ -6,7 +6,7 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
       <div className="card">
         <span
           style={{textAlign: "right", cursor: "pointer"}}
-          className="pt-1 pr-2"
+          className="pt-2 pr-2"
           onClick={() => handleRemovingChart()}
         >
           <i class="fa fa-times" aria-hidden="true"></i>
@@ -23,3 +23,12 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
     </div>
   );
 }
+
+
+        // <span
+        //   style={{textAlign: "right", cursor: "pointer", fontSize: "2rem"}}
+        //   className="pr-3"
+        //   onClick={() => handleRemovingChart()}
+        // >
+        //   ×
+        // </span>

@@ -4,14 +4,6 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 
-// const AddCharts = ({ charts, types }) => {
-//   return (
-//     <div className="col-md-3">
-//       <input value={"nice"} />
-//     </div>
-//   );
-// }
-
 const getTypeOptions = (types) => {
   return types.map((label, id) => ({ id, label }));
 }
@@ -36,6 +28,20 @@ class AddCharts extends React.Component {
       newMetricType: this.state.newMetricType.label,
       newMetricName: this.state.newMetricName.label
     });
+
+    this.clearInputFields();
+  }
+
+  // THIS IS A HACK BECAUSE THE TYPEAHEAD LIBRARY DOES NOT EXPOSE A
+  // PROGRAMATIC WAY TO CLEAR THE STUPID INPUT FIELDS
+  clearInputFields = () => {
+    setTimeout(() => {
+      const typeBtn = document.querySelector(".metric-type .close");
+      typeBtn.click();
+
+      const nameBtn = document.querySelector(".metric-name .close");
+      nameBtn.click();
+    });
   }
 
   render() {
@@ -44,6 +50,8 @@ class AddCharts extends React.Component {
         <InputGroup>
           <InputGroup.Prepend>
             <Typeahead
+              className="metric-type"
+              clearButton
               onChange={value =>
                 this.setState({ newMetricType: value[0] })
               }
@@ -51,6 +59,8 @@ class AddCharts extends React.Component {
             />
           </InputGroup.Prepend>
           <Typeahead
+            className="metric-name"
+            clearButton
             onChange={value =>
               this.setState({ newMetricName: value[0] })
             }
