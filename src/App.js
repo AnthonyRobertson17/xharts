@@ -23,7 +23,7 @@ class App extends React.Component {
     console.log("chartsJson", chartsJson);
     try {
       let chartsTemp = JSON.parse(chartsJson);
-      console.log("chartsTemp.length", chartsTemp.length);
+      if (typeof chartsTemp !== "object") throw "yucky";
       charts = chartsTemp;
     } catch (e) {
       console.error("woa, charts could not be retrieved due to malformed JSON...", chartsJson);
@@ -91,7 +91,6 @@ class App extends React.Component {
     if (idx >= this.state.chartData.length) console.warn("this is a race condition...");
 
     BackendAdapter.queryCount(chartQueryParams).then(res => {
-      console.log("Loading Count DONE", res.data);
       const chartDataEntry = {
         metricType: chartParams.metricType,
         metricName: chartParams.metricName,
@@ -160,6 +159,21 @@ class App extends React.Component {
     this.refreshChartAtIdx({ idx: charts.length - 1, chartParams: newChart });
   }
 
+  handleRemovingChart(idx) {
+    let charts = JSON.parse(window.localStorage.getItem("charts"));
+    charts = [...charts.slice(0, idx), ...charts.slice(idx + 1)];
+
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        charts,
+        chartData: [...prevState.chartData.slice(0, idx), ...prevState.chartData.slice(idx + 1)]
+      }
+    });
+
+    window.localStorage.setItem("charts", JSON.stringify(charts));
+  }
+
   render() {
     console.log("### APP RENDER", this.chartTypes);
     return (
@@ -197,8 +211,8 @@ class App extends React.Component {
             <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
           </div>
           <div className="row">
-            {this.state.chartData.map(chart =>
-              <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} />
+            {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
+              <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
           </div>
         </div>
