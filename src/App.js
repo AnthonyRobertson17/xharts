@@ -23,7 +23,7 @@ class App extends React.Component {
     console.log("chartsJson", chartsJson);
     try {
       let chartsTemp = JSON.parse(chartsJson);
-      if (typeof chartsTemp !== "object") throw "yucky";
+      if (!chartsTemp || typeof chartsTemp !== "object") throw Error("yucky");
       charts = chartsTemp;
     } catch (e) {
       console.error("woa, charts could not be retrieved due to malformed JSON...", chartsJson);

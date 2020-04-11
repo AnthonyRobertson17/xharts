@@ -9,7 +9,7 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
           className="pt-2 pr-2"
           onClick={() => handleRemovingChart()}
         >
-          <i class="fa fa-times" aria-hidden="true"></i>
+          <i className="fa fa-times" aria-hidden="true"></i>
         </span>
         <div className="card-body">
           <h1>{data && data.length === 1 ? data[0].value : "Loading..."}</h1>
