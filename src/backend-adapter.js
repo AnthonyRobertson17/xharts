@@ -1,3 +1,5 @@
+import { AGGREGATION_TYPE_SINGLE, AGGREGATION_TYPE_TIMESERIES } from './add-charts.js';
+
 const dummyData = {
   data: [
     {
@@ -256,7 +258,7 @@ class BackendAdapter {
   }
 
   query(filters) {
-    const { startDatetime, endDatetime, metricName, metricType } = filters;
+    const { startDatetime, endDatetime, metricName, metricType, metricAggregationType } = filters;
     let url = `/metrics/${metricType}?`;
 
     let params = new URLSearchParams();
@@ -264,7 +266,7 @@ class BackendAdapter {
     params.set('start_datetime', startDatetime);
     params.set('end_datetime', endDatetime);
     params.set('metric_name', metricName);
-    params.set('bucket_count', 1);
+    params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 25);
 
     url += "&" + params.toString();
 
