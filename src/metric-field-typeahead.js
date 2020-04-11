@@ -38,6 +38,8 @@ class MetricFieldTypeahead extends React.PureComponent {
           onChange={value =>
             this.props.handleMetricFieldChange(value[0])
           }
+          clearButton
+          selected={[this.props.value || ""]}
           options={getOptionsFromData(this.props.data)}
         />
       </InputGroup>

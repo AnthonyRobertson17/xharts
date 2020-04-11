@@ -79,6 +79,7 @@ class App extends React.Component {
           new Date(params.start_datetime + "Z" || Date()),
           new Date(params.end_datetime + "Z" || Date())
         ],
+        metricField: params.q || "",
         metricNames
       });
     });
@@ -132,7 +133,7 @@ class App extends React.Component {
     window.history.pushState(
       { startDatetime, endDatetime },
       "XHARTS",
-      `?start_datetime=${startDatetime}&end_datetime=${endDatetime}`
+      `?start_datetime=${startDatetime}&end_datetime=${endDatetime}&q=${this.state.metricField || ""}`
     );
 
     BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
@@ -208,7 +209,7 @@ class App extends React.Component {
                 variant="primary"
                 onClick={() => this.submitDates()}
               >
-                <i class="fa fa-check" aria-hidden="true"></i>
+                <i className="fa fa-check" aria-hidden="true"></i>
               </Button>
               <MetricFieldTypeahead
                 data={this.state.data}

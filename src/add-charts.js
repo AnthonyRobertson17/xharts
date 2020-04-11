@@ -39,20 +39,6 @@ class AddCharts extends React.Component {
       newMetricName: this.state.newMetricName,
       newMetricAggregationType: this.state.newMetricAggregationType
     });
-
-    this.clearInputFields();
-  }
-
-  // THIS IS A HACK BECAUSE THE TYPEAHEAD LIBRARY DOES NOT EXPOSE A
-  // PROGRAMATIC WAY TO CLEAR THE STUPID INPUT FIELDS
-  clearInputFields = () => {
-    setTimeout(() => {
-      const typeBtn = document.querySelector(".metric-type .close");
-      typeBtn.click();
-
-      const nameBtn = document.querySelector(".metric-name .close");
-      nameBtn.click();
-    });
   }
 
   render() {
@@ -66,6 +52,7 @@ class AddCharts extends React.Component {
             onChange={value =>
               this.setState({ newMetricType: value[0] })
             }
+            selected={[this.state.newMetricType || ""]}
             options={getMetricTypeOptions(this.props.types)}
           />
           <div style={{width: "5px"}}></div>
@@ -76,6 +63,7 @@ class AddCharts extends React.Component {
             onChange={value =>
               this.setState({ newMetricName: value[0] })
             }
+            selected={[this.state.newMetricName || ""]}
             options={getMetricOptions(this.props.metricNames)}
           />
           <div style={{width: "5px"}}></div>

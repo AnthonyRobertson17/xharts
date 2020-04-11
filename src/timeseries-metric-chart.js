@@ -9,7 +9,7 @@ function firstIndexOfDisimilarity(str1, str2) {
     idx++;
   }
 
-  if (idx == Math.min(str1.length, str2.length)) {
+  if (idx === Math.min(str1.length, str2.length)) {
     return false;
   }
 
