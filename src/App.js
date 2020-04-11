@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { default as BackendAdapter, dateToQuery } from './backend-adapter.js';
-import AddCharts from './add-charts.js';
+import { default as AddCharts, AGGREGATION_TYPE_SINGLE } from './add-charts.js';
 import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
@@ -98,6 +98,7 @@ class App extends React.Component {
       const chartDataEntry = {
         metricType: chartParams.metricType,
         metricName: chartParams.metricName,
+        metricAggregationType: chartParams.metricAggregationType,
         data: res.data
       };
 
@@ -146,8 +147,12 @@ class App extends React.Component {
     this.setState({ metricField });
   }
 
-  handleNewChart({ newMetricType, newMetricName }) {
-    const newChart = { metricType: newMetricType, metricName: newMetricName };
+  handleNewChart({ newMetricType, newMetricName, newMetricAggregationType }) {
+    const newChart = {
+      metricType: newMetricType,
+      metricName: newMetricName,
+      metricAggregationType: newMetricAggregationType
+    };
     console.log("adding new Chart", newChart);
     this.setState(prevState => ({
       ...prevState,
@@ -216,9 +221,9 @@ class App extends React.Component {
           </div>
           <div className="row">
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
-              (!chart.bucketCount || chart.bucketCount === 1) ?
-                <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
-                : <TimeseriesMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+              (!chart.metricAggregationType || chart.metricAggregationType === AGGREGATION_TYPE_SINGLE) ?
+                <SingleMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+                : <TimeseriesMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
           </div>
         </div>

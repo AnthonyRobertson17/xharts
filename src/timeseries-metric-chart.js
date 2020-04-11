@@ -12,7 +12,7 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
           <i className="fa fa-times" aria-hidden="true"></i>
         </span>
         <div className="card-body">
-          <h1>{!!data ? "THIS IS TIME SERIES DATA" : "Loading Timeseries..."}</h1>
+          <h1>{!!data ? "THIS IS TIME SERIES DATA: " + JSON.stringify(data) : "Loading Timeseries..."}</h1>
           <small>
             <strong>{type}</strong>
             {" chart for "}

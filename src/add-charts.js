@@ -1,10 +1,11 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
 
-const getTypeOptions = (types) => {
+const getMetricTypeOptions = (types) => {
   return types.map((label, id) => ({ id, label }));
 }
 
@@ -12,21 +13,31 @@ const getMetricOptions = (data) => {
   return data.map((label, id) => ({ id, label }));
 }
 
+const AGGREGATION_TYPE_SINGLE = "single";
+const AGGREGATION_TYPE_TIMESERIES = "timeseries";
+const AGGREGATION_TYPES = [
+  AGGREGATION_TYPE_SINGLE,
+  AGGREGATION_TYPE_TIMESERIES
+];
+
 class AddCharts extends React.Component {
 
   state = {
     newMetricType: "",
-    newMetricName: ""
+    newMetricName: "",
+    newMetricAggregationType: AGGREGATION_TYPES[0]
   }
 
   handleNewChart = () => {
     console.log({
       newMetricType: this.state.newMetricType.label,
-      newMetricName: this.state.newMetricName.label
+      newMetricName: this.state.newMetricName.label,
+      newMetricAggregationType: this.state.newMetricAggregationType
     });
     this.props.handleNewChart({
       newMetricType: this.state.newMetricType.label,
-      newMetricName: this.state.newMetricName.label
+      newMetricName: this.state.newMetricName.label,
+      newMetricAggregationType: this.state.newMetricAggregationType
     });
 
     this.clearInputFields();
@@ -48,16 +59,15 @@ class AddCharts extends React.Component {
     return (
       <div>
         <InputGroup>
-          <InputGroup.Prepend>
-            <Typeahead
-              className="metric-type"
-              clearButton
-              onChange={value =>
-                this.setState({ newMetricType: value[0] })
-              }
-              options={console.log(this.props) || getTypeOptions(this.props.types)}
-            />
-          </InputGroup.Prepend>
+          <Typeahead
+            className="metric-type"
+            clearButton
+            onChange={value =>
+              this.setState({ newMetricType: value[0] })
+            }
+            options={getMetricTypeOptions(this.props.types)}
+          />
+          <div style={{width: "5px"}}></div>
           <Typeahead
             className="metric-name"
             clearButton
@@ -66,15 +76,19 @@ class AddCharts extends React.Component {
             }
             options={getMetricOptions(this.props.metricNames)}
           />
-          <InputGroup.Append>
-            <Button
-              variant="primary"
-              disabled={!this.state.newMetricType || !this.state.newMetricName}
-              onClick={() => this.handleNewChart()}
-            >
-              Add Metric
-            </Button>
-          </InputGroup.Append>
+          <div style={{width: "5px"}}></div>
+          <Form.Control as="select" onChange={(e) => this.setState({ newMetricAggregationType: e.target.value })}>
+            {AGGREGATION_TYPES.map(selection => <option key={selection}>{selection}</option>)}
+          </Form.Control>
+          <div style={{width: "5px"}}></div>
+          <Button
+            variant="primary"
+            disabled={!this.state.newMetricType || !this.state.newMetricName}
+            onClick={() => this.handleNewChart()}
+          >
+            <i className="fa fa-plus" aria-hidden="true"></i>
+          </Button>
+
         </InputGroup>
       </div>
     );
@@ -82,3 +96,9 @@ class AddCharts extends React.Component {
 }
 
 export default AddCharts;
+
+export {
+  AGGREGATION_TYPE_SINGLE,
+  AGGREGATION_TYPE_TIMESERIES,
+  AGGREGATION_TYPES
+};
