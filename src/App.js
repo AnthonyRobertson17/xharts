@@ -5,6 +5,7 @@ import AddCharts from './add-charts.js';
 import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
+import TimeseriesMetricChart from './timeseries-metric-chart.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
@@ -215,7 +216,9 @@ class App extends React.Component {
           </div>
           <div className="row">
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
-              <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+              (!chart.bucketCount || chart.bucketCount === 1) ?
+                <SingleMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+                : <TimeseriesMetricChart type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
           </div>
         </div>
