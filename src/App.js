@@ -75,8 +75,8 @@ class App extends React.Component {
         data: res.data,
         isLoading: false,
         dates: [
-          new Date(params.start_datetime || Date()),
-          new Date(params.end_datetime || Date())
+          new Date(params.start_datetime + "Z" || Date()),
+          new Date(params.end_datetime + "Z" || Date())
         ],
         metricNames
       });

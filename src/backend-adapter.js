@@ -311,10 +311,11 @@ class BackendAdapter {
     params.set('metric_name', metricName);
     params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 10);
 
-    url += "&" + params.toString();
+    url += params.toString();
 
     return fetch(url)
-      .then(res => res.json());
+      .then(res => res.json())
+      .then(res => console.log("response", res) || res);
   }
 
   queryCount(filters) {
