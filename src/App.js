@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import BackendAdapter from './backend-adapter.js';
+import { default as BackendAdapter, dateToQuery } from './backend-adapter.js';
 import AddCharts from './add-charts.js';
 import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metric-field-typeahead.js';
 import LineGraph from './line-graph.js';
@@ -119,8 +119,8 @@ class App extends React.Component {
 
   submitDates() {
     console.log(`### Filtering for dates: ${this.state.dates}`);
-    const startDatetime = this.state.dates[0].toISOString().slice(0, -5);
-    const endDatetime = this.state.dates[1].toISOString().slice(0, -5);
+    const startDatetime = dateToQuery(this.state.dates[0]);
+    const endDatetime = dateToQuery(this.state.dates[1]);
 
     // the pushedState isn't utilized by the app yet...but it _could_ be
     window.history.pushState(
@@ -129,7 +129,7 @@ class App extends React.Component {
       `?start_datetime=${startDatetime}&end_datetime=${endDatetime}`
     );
 
-    BackendAdapter.getFilteredData({ dates: this.state.dates }).then(res => {
+    BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
       console.log("Filtering done", res.data);
 
       let metricNames = getMetricNamesFromData(res.data);

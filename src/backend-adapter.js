@@ -217,6 +217,8 @@ const dummyData = {
   }
 };
 
+const dateToQuery = (date) => date.toISOString().slice(0, -5);
+
 const BackendAdapter = {
   getInitialDummyData: () => {
     return Promise.resolve(dummyData);
@@ -233,13 +235,16 @@ const BackendAdapter = {
   getFilteredData: (filters) => {
     if (filters.mock) return Promise.resolve(dummyData);
 
-    const { dates } = filters;
+    const { startDatetime, endDatetime } = filters;
     let url = "/metrics"
 
-    if (dates) {
-      const startDatetime = dates[0].toISOString().slice(0, -5);
-      const endDatetime = dates[1].toISOString().slice(0, -5);
-      url += `?start_datetime=${startDatetime}&end_datetime=${endDatetime}`
+    if (startDatetime || endDatetime) {
+      let params = new URLSearchParams();
+
+      startDatetime && params.set('start_datetime', startDatetime);
+      endDatetime && params.set('end_datetime', endDatetime);
+
+      url += '?' + params.toString();
     }
 
     return fetch(url)
@@ -266,3 +271,5 @@ const BackendAdapter = {
 };
 
 export default BackendAdapter;
+
+export { dateToQuery };
