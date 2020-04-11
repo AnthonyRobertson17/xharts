@@ -22,7 +22,7 @@ function getOptionsFromData(data) {
     getKeysFromObj(metric.data).forEach(k => options.add(k));
   });
 
-  console.log(Array.from(options));
+  console.log("metric-field-typeahead options", Array.from(options));
   return Array.from(options);
 }
 
@@ -34,6 +34,7 @@ class MetricFieldTypeahead extends React.PureComponent {
           <InputGroup.Text id="basic-addon1">Metric Fieldname</InputGroup.Text>
         </InputGroup.Prepend>
         <Typeahead
+          id="main-chart-metric-field-typeahead"
           onChange={value =>
             this.props.handleMetricFieldChange(value[0])
           }

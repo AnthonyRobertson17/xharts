@@ -6,11 +6,11 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const getMetricTypeOptions = (types) => {
-  return types.map((label, id) => ({ id, label }));
+  return types;
 }
 
 const getMetricOptions = (data) => {
-  return data.map((label, id) => ({ id, label }));
+  return data;
 }
 
 const AGGREGATION_TYPE_SINGLE = "single";
@@ -30,13 +30,13 @@ class AddCharts extends React.Component {
 
   handleNewChart = () => {
     console.log({
-      newMetricType: this.state.newMetricType.label,
-      newMetricName: this.state.newMetricName.label,
+      newMetricType: this.state.newMetricType,
+      newMetricName: this.state.newMetricName,
       newMetricAggregationType: this.state.newMetricAggregationType
     });
     this.props.handleNewChart({
-      newMetricType: this.state.newMetricType.label,
-      newMetricName: this.state.newMetricName.label,
+      newMetricType: this.state.newMetricType,
+      newMetricName: this.state.newMetricName,
       newMetricAggregationType: this.state.newMetricAggregationType
     });
 
@@ -60,6 +60,7 @@ class AddCharts extends React.Component {
       <div>
         <InputGroup>
           <Typeahead
+            id="metric-type-typeahead"
             className="metric-type"
             clearButton
             onChange={value =>
@@ -69,6 +70,7 @@ class AddCharts extends React.Component {
           />
           <div style={{width: "5px"}}></div>
           <Typeahead
+            id="metric-name-typeahead"
             className="metric-name"
             clearButton
             onChange={value =>
