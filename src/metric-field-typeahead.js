@@ -31,7 +31,7 @@ class MetricFieldTypeahead extends React.PureComponent {
     return (
       <InputGroup>
         <InputGroup.Prepend>
-          <InputGroup.Text id="basic-addon1">Metric Fieldname</InputGroup.Text>
+          <InputGroup.Text id="basic-addon1">Metric name</InputGroup.Text>
         </InputGroup.Prepend>
         <Typeahead
           id="main-chart-metric-field-typeahead"

@@ -8,6 +8,7 @@ import SingleMetricChart from './single-metric-chart.js';
 import TimeseriesMetricChart from './timeseries-metric-chart.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
@@ -187,38 +188,53 @@ class App extends React.Component {
     console.log("### APP RENDER", this.chartTypes);
     return (
       <div className="App">
-        <h1>XHARTS</h1>
+        <Navbar bg="light">
+          <Navbar.Brand href="/">Metrix/Xharts</Navbar.Brand>
+        </Navbar>
+
         <div className="container">
-          <ButtonToolbar>
-            <DateTimeRangePicker
-              onChange={(dates) => this.updateDates.bind(this)(dates)}
-              value={this.state.dates}
-            />
-            <Button
-              style={{
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-                marginRight: '5px'
-              }}
-              variant="primary"
-              onClick={() => this.submitDates()}
-            >
-              Filter Dates
-            </Button>
-            <MetricFieldTypeahead
-              data={this.state.data}
-              value={this.state.metricField}
-              handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
-            />
-          </ButtonToolbar>
+          <div className="row my-4">
+            <ButtonToolbar>
+              <DateTimeRangePicker
+                onChange={(dates) => this.updateDates.bind(this)(dates)}
+                value={this.state.dates}
+              />
+              <Button
+                style={{
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  marginRight: '5px'
+                }}
+                variant="primary"
+                onClick={() => this.submitDates()}
+              >
+                <i class="fa fa-check" aria-hidden="true"></i>
+              </Button>
+              <MetricFieldTypeahead
+                data={this.state.data}
+                value={this.state.metricField}
+                handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
+              />
+            </ButtonToolbar>
+          </div>
         </div>
+
         <div className="container">
+          <div className="row">
+            <h1>At a Glance</h1>
+          </div>
           {true && <LineGraph data={this.state.data} metricField={this.state.metricField} />}
         </div>
+
         <div className="container">
+          <div className="row">
+            <h1>Dashboard</h1>
+          </div>
+
           <div className="row m-2">
             <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
           </div>
+
           <div className="row">
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
               chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
@@ -227,6 +243,7 @@ class App extends React.Component {
             )}
           </div>
         </div>
+
         <div style={{height: 150}}></div>
       </div>
     );
