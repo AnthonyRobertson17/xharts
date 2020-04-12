@@ -8,7 +8,8 @@ import SingleMetricChart from './single-metric-chart.js';
 import TimeseriesMetricChart from './timeseries-metric-chart.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from 'react-bootstrap/Navbar';
+// import Navbar from 'react-bootstrap/Navbar';
+import Navbar from './navbar.js';
 // import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from '@material-ui/core/Button';
@@ -196,8 +197,16 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Navbar bg="light">
-          <Navbar.Brand href="/">Metrix/Xharts</Navbar.Brand>
+        <Navbar>
+          <DateTimePicker
+            theme={"navbar"}
+            dates={this.state.dates}
+            data={this.state.data}
+            metricField={this.state.metricField}
+            updateDates={dates => this.updateDates(dates)}
+            submitDates={() => this.submitDates()}
+            handleMetricFieldChange={this.handleMetricFieldChange.bind(this)}
+          />
         </Navbar>
 
         <Container>
@@ -208,14 +217,6 @@ class App extends React.Component {
             justify="flex-end"
             alignItems="center"
           >
-            <DateTimePicker
-              dates={this.state.dates}
-              data={this.state.data}
-              metricField={this.state.metricField}
-              updateDates={dates => this.updateDates(dates)}
-              submitDates={() => this.submitDates()}
-              handleMetricFieldChange={this.handleMetricFieldChange.bind(this)}
-            />
           </Grid>
         </Container>
 
