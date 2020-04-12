@@ -6,19 +6,11 @@ import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metri
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
 import TimeseriesMetricChart from './timeseries-metric-chart.js';
-import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import Navbar from 'react-bootstrap/Navbar';
 import Navbar from './navbar.js';
-// import Button from 'react-bootstrap/Button';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-
-import IconButton from '@material-ui/core/IconButton';
-import DoneIcon from '@material-ui/icons/Done';
-import TextField from '@material-ui/core/TextField';
 import DateTimePicker from './datetime-picker.js';
 import Typography from '@material-ui/core/Typography';
 

@@ -1,15 +1,7 @@
 import React from 'react';
-// import DateTimeField from '@1stquad/react-bootstrap-datetimepicker';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metric-field-typeahead.js';
-
 import IconButton from '@material-ui/core/IconButton';
 import DoneIcon from '@material-ui/icons/Done';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-
-
 import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
 
 const MyDateTimePicker = ({
@@ -57,11 +49,3 @@ const MyDateTimePicker = ({
 }
 
 export default MyDateTimePicker;
-
-// <Grid item>
-//       <MetricFieldTypeahead
-//         data={data}
-//         value={metricField}
-//         handleMetricFieldChange={e => handleMetricFieldChange(e)}
-//       />
-//       </Grid>
