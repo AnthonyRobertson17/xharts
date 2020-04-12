@@ -15,6 +15,11 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 
+import IconButton from '@material-ui/core/IconButton';
+import DoneIcon from '@material-ui/icons/Done';
+import TextField from '@material-ui/core/TextField';
+import DateTimePicker from './datetime-picker.js';
+
 
 class App extends React.Component {
 
@@ -196,26 +201,22 @@ class App extends React.Component {
         </Navbar>
 
         <Container>
-          <div className="row my-4">
-            <ButtonToolbar>
-              <DateTimeRangePicker
-                onChange={(dates) => this.updateDates.bind(this)(dates)}
-                value={this.state.dates}
-              />
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => this.submitDates()}
-              >
-                <i className="fa fa-check" aria-hidden="true"></i>
-              </Button>
-              <MetricFieldTypeahead
-                data={this.state.data}
-                value={this.state.metricField}
-                handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
-              />
-            </ButtonToolbar>
-          </div>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            justify="flex-end"
+            alignItems="center"
+          >
+            <DateTimePicker
+              dates={this.state.dates}
+              data={this.state.data}
+              metricField={this.state.metricField}
+              updateDates={dates => this.updateDates(dates)}
+              submitDates={() => this.submitDates()}
+              handleMetricFieldChange={this.handleMetricFieldChange.bind(this)}
+            />
+          </Grid>
         </Container>
 
         <Container>
@@ -255,3 +256,31 @@ class App extends React.Component {
 }
 
 export default App;
+
+
+
+              // <DateTimeRangePicker
+              //   onChange={(dates) => this.updateDates.bind(this)(dates)}
+              //   value={this.state.dates}
+              // />
+
+              // <TextField
+              //   id="datetime-local"
+              //   label="Next appointment"
+              //   type="datetime-local"
+              //   defaultValue="2017-05-24T10:30"
+              //   // className={classes.textField}
+              //   InputLabelProps={{
+              //     shrink: true,
+              //   }}
+              // />
+
+              // <IconButton aria-label="submit" onClick={() => this.submitDates()}>
+              //   <DoneIcon />
+              // </IconButton>
+
+              // <MetricFieldTypeahead
+              //   data={this.state.data}
+              //   value={this.state.metricField}
+              //   handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
+              // />
