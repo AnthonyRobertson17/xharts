@@ -20,7 +20,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DoneIcon from '@material-ui/icons/Done';
 import TextField from '@material-ui/core/TextField';
 import DateTimePicker from './datetime-picker.js';
-
+import Typography from '@material-ui/core/Typography';
 
 class App extends React.Component {
 
@@ -220,13 +220,17 @@ class App extends React.Component {
           </Grid>
         </Container>
 
-        <Container>
-          <h1>Snapshot</h1>
+        <Container style={{marginTop: "20px"}}>
+          <Typography variant="h3" component="h1" style={{textAlign: "left"}}>
+            Snapshot
+          </Typography>
           {true && <LineGraph data={this.state.data} metricField={this.state.metricField} />}
         </Container>
 
-        <Container>
-          <h1>Dashboard</h1>
+        <Container style={{marginTop: "20px"}}>
+          <Typography variant="h3" component="h1" style={{textAlign: "left"}}>
+            Dashboard
+          </Typography>
 
           <Grid
             container
