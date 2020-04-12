@@ -198,6 +198,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <Navbar>
+          <MetricFieldTypeahead
+            data={this.state.data}
+            value={this.state.metricField}
+            handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
+          />
           <DateTimePicker
             theme={"navbar"}
             dates={this.state.dates}

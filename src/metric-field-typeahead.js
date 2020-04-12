@@ -30,7 +30,7 @@ class MetricFieldTypeahead extends React.PureComponent {
       <Autocomplete
         id="main-chart-metric-field-typeahead"
         options={getOptionsFromData(this.props.data)}
-        style={{ width: 300 }}
+        style={{ width: 300, marginRight: 10 }}
         value={this.props.value}
         renderInput={(params) => <TextField {...params} label="Metric Name Input" variant="outlined" />}
         onChange={(_event, value) =>
