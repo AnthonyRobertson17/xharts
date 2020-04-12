@@ -6,11 +6,12 @@ import { default as MetricFieldTypeahead, getMetricNamesFromData } from './metri
 import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
 import TimeseriesMetricChart from './timeseries-metric-chart.js';
-import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+
+import Navbar from './navbar.js';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import DateTimePicker from './datetime-picker.js';
+import Typography from '@material-ui/core/Typography';
 
 class App extends React.Component {
 
@@ -187,61 +188,67 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Navbar bg="light">
-          <Navbar.Brand href="/">Metrix/Xharts</Navbar.Brand>
+        <Navbar>
+          <MetricFieldTypeahead
+            data={this.state.data}
+            value={this.state.metricField}
+            handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
+          />
+          <DateTimePicker
+            theme={"navbar"}
+            dates={this.state.dates}
+            data={this.state.data}
+            metricField={this.state.metricField}
+            updateDates={dates => this.updateDates(dates)}
+            submitDates={() => this.submitDates()}
+            handleMetricFieldChange={this.handleMetricFieldChange.bind(this)}
+          />
         </Navbar>
 
-        <div className="container">
-          <div className="row my-4">
-            <ButtonToolbar>
-              <DateTimeRangePicker
-                onChange={(dates) => this.updateDates.bind(this)(dates)}
-                value={this.state.dates}
-              />
-              <Button
-                style={{
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                  marginRight: '5px'
-                }}
-                variant="primary"
-                onClick={() => this.submitDates()}
-              >
-                <i className="fa fa-check" aria-hidden="true"></i>
-              </Button>
-              <MetricFieldTypeahead
-                data={this.state.data}
-                value={this.state.metricField}
-                handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
-              />
-            </ButtonToolbar>
-          </div>
-        </div>
+        <Container>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            justify="flex-end"
+            alignItems="center"
+          >
+          </Grid>
+        </Container>
 
-        <div className="container">
-          <div className="row">
-            <h1>At a Glance</h1>
-          </div>
+        <Container style={{marginTop: "20px"}}>
+          <Typography variant="h3" component="h1" style={{textAlign: "left"}}>
+            Snapshot
+          </Typography>
           {true && <LineGraph data={this.state.data} metricField={this.state.metricField} />}
-        </div>
+        </Container>
 
-        <div className="container">
-          <div className="row">
-            <h1>Dashboard</h1>
-          </div>
+        <Container style={{marginTop: "20px"}}>
+          <Typography variant="h3" component="h1" style={{textAlign: "left"}}>
+            Dashboard
+          </Typography>
 
-          <div className="row m-2">
-            <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
-          </div>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            {true &&
+              <Grid item lg>
+                <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
+              </Grid>}
+          </Grid>
 
-          <div className="row">
+          <Grid container spacing={2}>
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
               chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
                 <SingleMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
                 : <TimeseriesMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
-          </div>
-        </div>
+          </Grid>
+        </Container>
 
         <div style={{height: 150}}></div>
       </div>

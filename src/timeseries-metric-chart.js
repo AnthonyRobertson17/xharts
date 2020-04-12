@@ -1,5 +1,11 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 function firstIndexOfDisimilarity(str1, str2) {
   let idx = 0
@@ -84,24 +90,24 @@ const graphWrapper = (data) => {
 
 export default ({ type, metricName, data, handleRemovingChart }) => {
   return (
-    <div className="col-md-6 mb-4">
-      <div className="card">
-        <span
-          style={{textAlign: "right", cursor: "pointer"}}
-          className="pt-2 pr-2"
-          onClick={() => handleRemovingChart()}
-        >
-          <i className="fa fa-times" aria-hidden="true"></i>
-        </span>
-        <div className="card-body">
+    <Grid item md={6}>
+      <Card>
+        <CardHeader
+          action={
+            <IconButton aria-label="close" onClick={() => handleRemovingChart()}>
+              <CloseIcon />
+            </IconButton>
+          }
+        />
+        <CardContent>
           <div>{data && graphWrapper({ id: metricName, color: "hsl(72, 70%, 50%)", type, data })}</div>
           <small>
             <strong>{type}</strong>
             {" graph for "}
             <strong>{metricName}</strong>
           </small>
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 }

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import flattenDeep from 'lodash/flattenDeep';
-import InputGroup from 'react-bootstrap/InputGroup';
 
 function getKeysFromObj(obj) {
   const results = Object.keys(obj).map(key => {
@@ -28,20 +27,16 @@ function getOptionsFromData(data) {
 class MetricFieldTypeahead extends React.PureComponent {
   render() {
     return (
-      <InputGroup>
-        <InputGroup.Prepend>
-          <InputGroup.Text id="basic-addon1">Metric name</InputGroup.Text>
-        </InputGroup.Prepend>
-        <Typeahead
-          id="main-chart-metric-field-typeahead"
-          onChange={value =>
-            this.props.handleMetricFieldChange(value[0])
-          }
-          clearButton
-          selected={[this.props.value || ""]}
-          options={getOptionsFromData(this.props.data)}
-        />
-      </InputGroup>
+      <Autocomplete
+        id="main-chart-metric-field-typeahead"
+        options={getOptionsFromData(this.props.data)}
+        style={{ width: 300, marginRight: 10 }}
+        value={this.props.value}
+        renderInput={(params) => <TextField {...params} label="Metric Name Input" variant="outlined" />}
+        onChange={(_event, value) =>
+          this.props.handleMetricFieldChange(value)
+        }
+      />
     );
   }
 }
