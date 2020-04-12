@@ -1,9 +1,10 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
+import FormGroup from '@material-ui/core/FormGroup';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import DoneIcon from '@material-ui/icons/Done';
 
 const getMetricTypeOptions = (types) => {
   return types;
@@ -39,47 +40,57 @@ class AddCharts extends React.Component {
       newMetricName: this.state.newMetricName,
       newMetricAggregationType: this.state.newMetricAggregationType
     });
+
+    this.setState({
+      newMetricType: "",
+      newMetricName: ""
+    });
   }
 
   render() {
     return (
       <div>
-        <InputGroup>
-          <Typeahead
-            id="metric-type-typeahead"
-            className="metric-type"
-            clearButton
-            onChange={value =>
-              this.setState({ newMetricType: value[0] })
-            }
-            selected={[this.state.newMetricType || ""]}
+        <FormGroup row>
+          <Autocomplete
+            id="new-metric-type-typeahead"
             options={getMetricTypeOptions(this.props.types)}
+            style={{ width: 300, marginRight: 10 }}
+            value={this.state.newMetricType}
+            renderInput={(params) => <TextField {...params} label="Metric Type" variant="outlined" />}
+            onChange={(_event, value) => this.setState({ newMetricType: value })}
           />
           <div style={{width: "5px"}}></div>
-          <Typeahead
-            id="metric-name-typeahead"
-            className="metric-name"
-            clearButton
-            onChange={value =>
-              this.setState({ newMetricName: value[0] })
-            }
-            selected={[this.state.newMetricName || ""]}
-            options={getMetricOptions(this.props.metricNames)}
-          />
-          <div style={{width: "5px"}}></div>
-          <Form.Control as="select" onChange={(e) => this.setState({ newMetricAggregationType: e.target.value })}>
-            {AGGREGATION_TYPES.map(selection => <option key={selection}>{selection}</option>)}
-          </Form.Control>
-          <div style={{width: "5px"}}></div>
-          <Button
-            variant="primary"
-            disabled={!this.state.newMetricType || !this.state.newMetricName}
-            onClick={() => this.handleNewChart()}
-          >
-            <i className="fa fa-plus" aria-hidden="true"></i>
-          </Button>
 
-        </InputGroup>
+          <Autocomplete
+            id="new-metric-name-typeahead"
+            options={getMetricOptions(this.props.metricNames)}
+            style={{ width: 300, marginRight: 10 }}
+            value={this.state.newMetricName}
+            renderInput={(params) => <TextField {...params} label="Metric Name" variant="outlined" />}
+            onChange={(_event, value) => this.setState({ newMetricName: value })}
+          />
+          <div style={{width: "5px"}}></div>
+
+          <Autocomplete
+            id="new-metric-aggregation-typeahead"
+            options={AGGREGATION_TYPES}
+            style={{ width: 300, marginRight: 10 }}
+            value={this.state.newMetricAggregationType}
+            renderInput={(params) => <TextField {...params} label="Metric Aggregation" variant="outlined" />}
+            onChange={(_event, value) => this.setState({ newMetricAggregationType: value })}
+          />
+          <div style={{width: "5px"}}></div>
+
+          <div style={{width: "5px"}}></div>
+
+          <IconButton
+            aria-label="submit"
+            disabled={!this.state.newMetricType || !this.state.newMetricName}
+            onClick={() => this.handleNewChart()}>
+            <DoneIcon />
+          </IconButton>
+
+        </FormGroup>
       </div>
     );
   }

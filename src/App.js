@@ -266,31 +266,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-
-
-              // <DateTimeRangePicker
-              //   onChange={(dates) => this.updateDates.bind(this)(dates)}
-              //   value={this.state.dates}
-              // />
-
-              // <TextField
-              //   id="datetime-local"
-              //   label="Next appointment"
-              //   type="datetime-local"
-              //   defaultValue="2017-05-24T10:30"
-              //   // className={classes.textField}
-              //   InputLabelProps={{
-              //     shrink: true,
-              //   }}
-              // />
-
-              // <IconButton aria-label="submit" onClick={() => this.submitDates()}>
-              //   <DoneIcon />
-              // </IconButton>
-
-              // <MetricFieldTypeahead
-              //   data={this.state.data}
-              //   value={this.state.metricField}
-              //   handleMetricFieldChange={e => this.handleMetricFieldChange(e)}
-              // />
