@@ -12,8 +12,8 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
       <Card>
         <CardHeader
           action={
-            <IconButton aria-label="settings">
-              <CloseIcon onClick={() => handleRemovingChart()} />
+            <IconButton aria-label="close" onClick={() => handleRemovingChart()}>
+              <CloseIcon />
             </IconButton>
           }
         />
