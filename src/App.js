@@ -9,8 +9,12 @@ import TimeseriesMetricChart from './timeseries-metric-chart.js';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+
 
 class App extends React.Component {
 
@@ -191,7 +195,7 @@ class App extends React.Component {
           <Navbar.Brand href="/">Metrix/Xharts</Navbar.Brand>
         </Navbar>
 
-        <div className="container">
+        <Container>
           <div className="row my-4">
             <ButtonToolbar>
               <DateTimeRangePicker
@@ -199,12 +203,8 @@ class App extends React.Component {
                 value={this.state.dates}
               />
               <Button
-                style={{
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                  marginRight: '5px'
-                }}
-                variant="primary"
+                color="primary"
+                variant="contained"
                 onClick={() => this.submitDates()}
               >
                 <i className="fa fa-check" aria-hidden="true"></i>
@@ -216,32 +216,37 @@ class App extends React.Component {
               />
             </ButtonToolbar>
           </div>
-        </div>
+        </Container>
 
-        <div className="container">
-          <div className="row">
-            <h1>At a Glance</h1>
-          </div>
+        <Container>
+          <h1>Snapshot</h1>
           {true && <LineGraph data={this.state.data} metricField={this.state.metricField} />}
-        </div>
+        </Container>
 
-        <div className="container">
-          <div className="row">
-            <h1>Dashboard</h1>
-          </div>
+        <Container>
+          <h1>Dashboard</h1>
 
-          <div className="row m-2">
-            <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
-          </div>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            {true &&
+              <Grid item lg>
+                <AddCharts charts={this.state.charts} types={this.chartTypes} metricNames={this.state.metricNames} handleNewChart={(newChart) => this.handleNewChart(newChart)} />
+              </Grid>}
+          </Grid>
 
-          <div className="row">
+          <Grid container spacing={2}>
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
               chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
                 <SingleMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
                 : <TimeseriesMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
-          </div>
-        </div>
+          </Grid>
+        </Container>
 
         <div style={{height: 150}}></div>
       </div>
