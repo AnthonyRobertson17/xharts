@@ -1,34 +1,31 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default ({ type, metricName, data, handleRemovingChart }) => {
   return (
-    <div className="col-md-6 mb-4">
-      <div className="card">
-        <span
-          style={{textAlign: "right", cursor: "pointer"}}
-          className="pt-2 pr-2"
-          onClick={() => handleRemovingChart()}
-        >
-          <i className="fa fa-times" aria-hidden="true"></i>
-        </span>
-        <div className="card-body">
+    <Grid item md={6}>
+      <Card>
+        <CardHeader
+          action={
+            <IconButton aria-label="settings">
+              <CloseIcon onClick={() => handleRemovingChart()} />
+            </IconButton>
+          }
+        />
+        <CardContent>
           <h1>{data && data.length === 1 ? data[0].value : "Loading..."}</h1>
           <small>
             <strong>{type}</strong>
             {" card for "}
             <strong>{metricName}</strong>
           </small>
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 }
-
-
-        // <span
-        //   style={{textAlign: "right", cursor: "pointer", fontSize: "2rem"}}
-        //   className="pr-3"
-        //   onClick={() => handleRemovingChart()}
-        // >
-        //   ×
-        // </span>

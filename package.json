@@ -2,8 +2,10 @@
   "name": "xharts",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://metrix:8000",
+  "proxy": "http://localhost:8000",
   "dependencies": {
+    "@material-ui/core": "^4.9.10",
+    "@material-ui/icons": "^4.9.1",
     "@nivo/line": "^0.59.3",
     "@wojtekmaj/react-datetimerange-picker": "^2.3.0",
     "bootstrap": "^4.4.1",
