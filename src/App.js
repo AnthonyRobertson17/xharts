@@ -7,7 +7,6 @@ import LineGraph from './line-graph.js';
 import SingleMetricChart from './single-metric-chart.js';
 import TimeseriesMetricChart from './timeseries-metric-chart.js';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './navbar.js';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
