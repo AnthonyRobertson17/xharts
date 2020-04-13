@@ -6,8 +6,21 @@ import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-export default ({ type, metricName, data, handleRemovingChart }) => {
-  return (
+const Message = ({ error, buckets }) => {
+  if (error) {
+    return <h1>Something went wrong...</h1>;
+  } else if (buckets) {
+    return <h1>{buckets[0].value}</h1>;
+  }
+  return <h1>{"Loading..."}</h1>;
+};
+
+const ErrorMessage = () => <h1>Something went wrong...</h1>;
+
+
+
+export default ({ type, metricName, data = {}, handleRemovingChart }) => {
+  return console.log("single", type, metricName, data) || (
     <Grid item md={6}>
       <Card>
         <CardHeader
@@ -18,7 +31,7 @@ export default ({ type, metricName, data, handleRemovingChart }) => {
           }
         />
         <CardContent>
-          <h1>{data && data.length === 1 ? data[0].value : "Loading..."}</h1>
+          <Message error={data.error} buckets={data.buckets} />
           <small>
             <strong>{type}</strong>
             {" card for "}

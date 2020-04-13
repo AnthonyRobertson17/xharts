@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 class App extends React.Component {
 
-  chartTypes = ["count", "max", "avg", "min"]
+  chartTypes = ["count", "max", "avg", "min", "sum"]
 
   constructor(props) {
     super(props);
@@ -47,7 +47,11 @@ class App extends React.Component {
         new Date(queryParams.endDatetime + "Z" || Date())
       ],
       charts: charts,
-      chartData: new Array(charts.length).fill(0)
+      chartData: charts.map(newChart => ({
+        metricType: newChart.metricType,
+        metricName: newChart.metricName,
+        metricAggregationType: newChart.metricAggregationType
+      }))
     };
   }
 
@@ -85,7 +89,7 @@ class App extends React.Component {
         metricNames
       });
     });
-
+    console.log("chartData", this.state.chartData);
     this.state.charts.forEach((chartParams, idx) => {
       this.refreshChartAtIdx({ idx, chartParams }, params);
     });
@@ -98,7 +102,7 @@ class App extends React.Component {
 
     if (idx >= this.state.chartData.length) console.warn("this is a race condition...");
 
-    BackendAdapter.queryCount(chartQueryParams).then(res => {
+    BackendAdapter.query(chartQueryParams).then(res => {
       const chartDataEntry = {
         metricType: chartParams.metricType,
         metricName: chartParams.metricName,
@@ -151,7 +155,11 @@ class App extends React.Component {
     this.setState(prevState => ({
       ...prevState,
       charts: [...prevState.charts, newChart],
-      chartData: [...prevState.chartData, 0],
+      chartData: [...prevState.chartData, {
+        metricType: newChart.metricType,
+        metricName: newChart.metricName,
+        metricAggregationType: newChart.metricAggregationType
+      }],
     }));
 
     let charts = JSON.parse(window.localStorage.getItem("charts"));
@@ -234,8 +242,8 @@ class App extends React.Component {
           <Grid container spacing={2}>
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
               chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
-                <SingleMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
-                : <TimeseriesMetricChart key={`idx-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+                <SingleMetricChart key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={chart.data} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+                : <TimeseriesMetricChart key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
             )}
           </Grid>
         </Container>
