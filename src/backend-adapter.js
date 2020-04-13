@@ -308,14 +308,15 @@ class BackendAdapter {
 
     params.set('start_datetime', startDatetime);
     params.set('end_datetime', endDatetime);
-    params.set('metric_name', metricName);
+    params.set('metric_name', `data.${metricName}`);
     params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 10);
 
     url += params.toString();
 
     return fetch(url)
       .then(res => res.json())
-      .then(res => console.log("response", res) || res);
+      .then(res => console.log("response", res) || res)
+      .catch(error => ({ data: { error } }));
   }
 
   queryCount(filters) {

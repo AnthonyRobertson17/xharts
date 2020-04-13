@@ -2,7 +2,7 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import DoneIcon from '@material-ui/icons/Done';
 import Grid from '@material-ui/core/Grid';
-import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
+import { KeyboardDateTimePicker } from "@material-ui/pickers";
 import DateFnsAdapter from "@date-io/date-fns";
 
 const dateFns = new DateFnsAdapter();
