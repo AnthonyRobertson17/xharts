@@ -18,13 +18,41 @@ Web Front-end for [metrix](https://github.com/woodgern/metrix)
 
 We want to render timeseries data, with arbitrary schemas.
 
-# Expected schema:
+# Expected schema
+
+## Basic Metric
+
+```bash
+$ curl 'http://localhost:8000/metrics?start_datetime=2019-12-24T17%3A38%3A00&end_datetime=2019-12-24T17%3A42%3A00'
+```
+
 ```
 {
-  "datetime": "datetimeISOStringZ",
-  "name": "arbitrary event name",
-  "date": {
-    // arbitrary JSON
+  "id": <Number>,
+  "metric_name": <String>,
+  "data": <JSON>,
+  "created_at": <UTCDatetimeString>,
+  "updated_at": <UTCDatetimeString>
+}
+```
+
+## Aggregate Functions
+
+
+```bash
+$ curl 'http://localhost:8000/metrics/count?start_datetime=2019-12-24T17%3A38%3A00&end_datetime=2019-12-24T17%3A42%3A00&metric_name=data.latency&bucket_count=1'
+```
+
+```
+{
+  data: {
+    buckets: [
+      {
+        "value": <Number>,
+        "bucket": <UTCDatetimeString>
+      },
+      ...
+    ]
   }
 }
 ```
@@ -38,22 +66,32 @@ We want to render timeseries data, with arbitrary schemas.
 
 In the project directory, you can run:
 
-### `make server`
+### `make local`
 
-Runs the app in the development mode.<br />
+Runs the app in development mode **LOCALLY** with yarn.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
+### `make server`
+
+Runs the app in the development mode in **DOCKER**.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
+
+## CRA Boilerplate
+
 *** BELOW THIS IS ALL BOILERPLATE FROM REACT-CREATE-APP ***
 
-### `make test`
+### `npm test`
 
 Launches the test runner in the interactive watch mode.<br />
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `make build`
+### `npm build`
 
 Builds the app for production to the `build` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
