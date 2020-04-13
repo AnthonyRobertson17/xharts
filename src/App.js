@@ -34,12 +34,18 @@ class App extends React.Component {
       window.localStorage.setItem("charts", "[]");
     }
 
+    const queryParams = this.getQueryParams();
+
     this.state = {
       data: [],
       isLoading: true,
       metricField: "",
       countData: {},
       metricNames: [],
+      dates: [
+        new Date(queryParams.startDatetime + "Z" || Date()),
+        new Date(queryParams.endDatetime + "Z" || Date())
+      ],
       charts: charts,
       chartData: new Array(charts.length).fill(0)
     };
@@ -75,10 +81,6 @@ class App extends React.Component {
       this.setState({
         data: res.data,
         isLoading: false,
-        dates: [
-          new Date(params.start_datetime + "Z" || Date()),
-          new Date(params.end_datetime + "Z" || Date())
-        ],
         metricField: params.q || "",
         metricNames
       });
@@ -119,15 +121,10 @@ class App extends React.Component {
     });
   }
 
-  updateDates(dates) {
-    console.log(dates);
-    this.setState({ dates });
-  }
-
-  submitDates() {
-    console.log(`### Filtering for dates: ${this.state.dates}`);
-    const startDatetime = dateToQuery(this.state.dates[0]);
-    const endDatetime = dateToQuery(this.state.dates[1]);
+  submitDates([startDate, endDate]) {
+    console.log(`### Filtering for dates: ${startDate} - ${endDate}`);
+    const startDatetime = dateToQuery(startDate);
+    const endDatetime = dateToQuery(endDate);
 
     // the pushedState isn't utilized by the app yet...but it _could_ be
     window.history.pushState(
@@ -136,13 +133,7 @@ class App extends React.Component {
       `?start_datetime=${startDatetime}&end_datetime=${endDatetime}${this.state.metricField ? "&q=" + this.state.metricField : ""}`
     );
 
-    // BackendAdapter.getFilteredData({ startDatetime, endDatetime }).then(res => {
-    //   console.log("Filtering done", res.data);
-
-    //   let metricNames = getMetricNamesFromData(res.data);
-
-    //   this.setState({ data: res.data, metricNames });
-    // });
+    this.setState({ dates: [startDate, endDate] });
     this.refreshAll();
   }
 
@@ -199,8 +190,7 @@ class App extends React.Component {
             dates={this.state.dates}
             data={this.state.data}
             metricField={this.state.metricField}
-            updateDates={dates => this.updateDates(dates)}
-            submitDates={() => this.submitDates()}
+            submitDates={(dates) => this.submitDates(dates)}
             handleMetricFieldChange={this.handleMetricFieldChange.bind(this)}
           />
         </Navbar>
