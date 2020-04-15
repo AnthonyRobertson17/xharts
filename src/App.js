@@ -91,11 +91,23 @@ class App extends React.Component {
     });
     console.log("chartData", this.state.chartData);
     this.state.charts.forEach((chartParams, idx) => {
-      this.refreshChartAtIdx({ idx, chartParams }, params);
+      this.refreshChart({ idx, chartParams }, params);
     });
   }
 
-  refreshChartAtIdx({ idx, chartParams }, params) {
+  refreshChartAtIdx(idx) {
+    this.refreshChart({ idx, chartParams: this.state.charts[idx] });
+    this.setState(prevState => {
+      const prevCharData = prevState.chartData;
+      prevCharData[idx].data = {}
+      return {
+        ...prevState,
+        chartData: [...prevCharData]
+      };
+    });
+  }
+
+  refreshChart({ idx, chartParams }, params) {
     params =  params || this.getQueryParams();
 
     const chartQueryParams = { ...params, ...chartParams };
@@ -166,7 +178,7 @@ class App extends React.Component {
     charts.push(newChart);
     window.localStorage.setItem("charts", JSON.stringify(charts));
 
-    this.refreshChartAtIdx({ idx: charts.length - 1, chartParams: newChart });
+    this.refreshChart({ idx: charts.length - 1, chartParams: newChart });
   }
 
   handleRemovingChart(idx) {
@@ -242,8 +254,22 @@ class App extends React.Component {
           <Grid container spacing={2}>
             {this.state.chartData.filter(chart => !!chart).map((chart, idx) =>
               chart.metricAggregationType === AGGREGATION_TYPE_SINGLE ?
-                <SingleMetricChart key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={chart.data} handleRemovingChart={() => this.handleRemovingChart(idx)} />
-                : <TimeseriesMetricChart key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`} type={chart.metricType} metricName={chart.metricName} data={(chart.data || {}).buckets} handleRemovingChart={() => this.handleRemovingChart(idx)} />
+                <SingleMetricChart
+                  key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`}
+                  type={chart.metricType}
+                  metricName={chart.metricName}
+                  data={chart.data}
+                  handleRefreshChart={() => this.refreshChartAtIdx(idx)}
+                  handleRemovingChart={() => this.handleRemovingChart(idx)}
+                />
+                : <TimeseriesMetricChart
+                    key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`}
+                    type={chart.metricType}
+                    metricName={chart.metricName}
+                    data={(chart.data || {}).buckets}
+                    handleRefreshChart={() => this.refreshChartAtIdx(idx)}
+                    handleRemovingChart={() => this.handleRemovingChart(idx)}
+                  />
             )}
           </Grid>
         </Container>
