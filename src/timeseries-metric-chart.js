@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 function firstIndexOfDisimilarity(str1, str2) {
   let idx = 0
@@ -88,18 +89,24 @@ const graphWrapper = (data) => {
   );
 };
 
-export default ({ type, metricName, data, handleRemovingChart }) => {
+export default ({ type, metricName, data, handleRemovingChart, handleRefreshChart }) => {
   return (
     <Grid item md={6}>
       <Card>
         <CardHeader
           action={
-            <IconButton aria-label="close" onClick={() => handleRemovingChart()}>
-              <CloseIcon />
-            </IconButton>
+            <React.Fragment>
+              <IconButton aria-label="refresh" onClick={() => handleRefreshChart()}>
+                <RefreshIcon />
+              </IconButton>
+              <IconButton aria-label="close" onClick={() => handleRemovingChart()}>
+                <CloseIcon />
+              </IconButton>
+            </React.Fragment>
           }
         />
         <CardContent>
+          {!data && <h1>{"Loading..."}</h1>}
           <div>{data && graphWrapper({ id: metricName, color: "hsl(72, 70%, 50%)", type, data })}</div>
           <small>
             <strong>{type}</strong>
