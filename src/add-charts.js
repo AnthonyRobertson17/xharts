@@ -13,6 +13,15 @@ const getMetricOptions = (data) => {
   return data;
 }
 
+function getMetricDataOptions(metricName) {
+  return fetch("/metrics/search_parameters?metric_name=" + metricName).then(res => res.json()).then(val => console.log(val.data.parameter_names) || val.data.parameter_names);;
+}
+
+function getMetricNames(query) {
+  console.log("getMetricNames", query);
+  return fetch("/metrics/search_metric_names?q=" + query).then(res => res.json()).then(val => console.log(val.data.metric_names) || val.data.metric_names);
+}
+
 const AGGREGATION_TYPE_SINGLE = "single";
 const AGGREGATION_TYPE_TIMESERIES = "timeseries";
 const AGGREGATION_TYPES = [
@@ -23,25 +32,37 @@ const AGGREGATION_TYPES = [
 class AddCharts extends React.Component {
 
   state = {
+    metricOptions: [],
+    metricDataOptions: [],
     newMetricType: "",
     newMetricName: "",
+    newMetricDataPath: "",
     newMetricAggregationType: AGGREGATION_TYPES[0]
+  }
+
+  constructor(props) {
+    super(props);
+
+    getMetricNames('').then(metricOptions => this.setState({ metricOptions }));
   }
 
   handleNewChart = () => {
     console.log({
       newMetricType: this.state.newMetricType,
       newMetricName: this.state.newMetricName,
+      newMetricDataPath: this.state.newMetricDataPath,
       newMetricAggregationType: this.state.newMetricAggregationType
     });
     this.props.handleNewChart({
       newMetricType: this.state.newMetricType,
       newMetricName: this.state.newMetricName,
+      newMetricDataPath: this.state.newMetricDataPath,
       newMetricAggregationType: this.state.newMetricAggregationType
     });
 
     this.setState({
       newMetricType: "",
+      newMetricDataPath: "",
       newMetricName: ""
     });
   }
@@ -62,11 +83,25 @@ class AddCharts extends React.Component {
 
           <Autocomplete
             id="new-metric-name-typeahead"
-            options={getMetricOptions(this.props.metricNames)}
+            options={this.state.metricOptions}
+            filterOptions={v => v}
             style={{ width: 300, marginRight: 10 }}
             value={this.state.newMetricName}
-            renderInput={(params) => <TextField {...params} label="Metric Name" variant="outlined" />}
-            onChange={(_event, value) => this.setState({ newMetricName: value })}
+            renderInput={(params) => <TextField {...params} onChange={e => getMetricNames(e.target.value).then(metricOptions => this.setState({ metricOptions }))} label="Metric Name" variant="outlined" />}
+            onChange={(_event, newMetricName) => {
+              this.setState({ newMetricName });
+              getMetricDataOptions(newMetricName).then(metricDataOptions => this.setState({ metricDataOptions }));
+            }}
+          />
+          <div style={{width: "5px"}}></div>
+
+          <Autocomplete
+            id="new-metric-data-typeahead"
+            options={this.state.metricDataOptions}
+            style={{ width: 300, marginRight: 10 }}
+            value={this.state.newMetricDataPath}
+            renderInput={(params) => <TextField {...params} label="Data Attr Name" variant="outlined" />}
+            onChange={(_event, value) => this.setState({ newMetricDataPath: value })}
           />
           <div style={{width: "5px"}}></div>
 
@@ -78,9 +113,6 @@ class AddCharts extends React.Component {
             renderInput={(params) => <TextField {...params} label="Metric Aggregation" variant="outlined" />}
             onChange={(_event, value) => this.setState({ newMetricAggregationType: value })}
           />
-          <div style={{width: "5px"}}></div>
-
-          <div style={{width: "5px"}}></div>
 
           <IconButton
             aria-label="submit"
