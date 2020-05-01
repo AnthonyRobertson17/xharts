@@ -333,6 +333,19 @@ class BackendAdapter {
 
     return this.query({ ...filters, metricType: "count" });
   }
+
+  getMetricDataOptions(metricName) {
+    return fetch("/metrics/search_parameters?metric_name=" + metricName)
+      .then(res => res.json())
+      .then(val => console.log(val.data.parameter_names) || val.data.parameter_names);;
+  }
+
+  getMetricNames(query) {
+    console.log("getMetricNames", query);
+    return fetch("/metrics/search_metric_names?q=" + query)
+      .then(res => res.json())
+      .then(val => console.log(val.data.metric_names) || val.data.metric_names);
+  }
 };
 
 export default new BackendAdapter();
