@@ -21,7 +21,7 @@ const ErrorMessage = () => <h1>Something went wrong...</h1>;
 
 
 
-export default ({ type, metricName, data = {}, handleRemovingChart, handleRefreshChart }) => {
+export default ({ type, metricName, metricDataPath, data = {}, handleRemovingChart, handleRefreshChart }) => {
   return console.log("single", type, metricName, data) || (
     <Grid item md={6}>
       <Card>
@@ -41,8 +41,8 @@ export default ({ type, metricName, data = {}, handleRemovingChart, handleRefres
           <Message error={data.error} buckets={data.buckets} />
           <small>
             <strong>{type}</strong>
-            {" card for "}
-            <strong>{metricName}</strong>
+            {" of "}
+            <strong>{metricName}</strong>{" for "}<strong>{metricDataPath}</strong>
           </small>
         </CardContent>
       </Card>

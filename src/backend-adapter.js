@@ -301,14 +301,22 @@ class BackendAdapter {
   }
 
   query(filters) {
-    const { startDatetime, endDatetime, metricName, metricType, metricAggregationType } = filters;
+    const {
+      startDatetime,
+      endDatetime,
+      metricName,
+      metricDataPath,
+      metricType,
+      metricAggregationType
+    } = filters;
     let url = `/metrics/${metricType}?`;
 
     let params = new URLSearchParams();
 
     params.set('start_datetime', startDatetime);
     params.set('end_datetime', endDatetime);
-    params.set('metric_name', `data.${metricName}`);
+    params.set('metric_data_path', `data.${metricDataPath}`);
+    params.set('q', `metric_name='${metricName}'`);
     params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 10);
 
     url += params.toString();
@@ -332,6 +340,19 @@ class BackendAdapter {
     }
 
     return this.query({ ...filters, metricType: "count" });
+  }
+
+  getMetricDataOptions(metricName) {
+    return fetch("/metrics/search_parameters?metric_name=" + metricName)
+      .then(res => res.json())
+      .then(val => console.log(val.data.parameter_names) || val.data.parameter_names);;
+  }
+
+  getMetricNames(query) {
+    console.log("getMetricNames", query);
+    return fetch("/metrics/search_metric_names?q=" + query)
+      .then(res => res.json())
+      .then(val => console.log(val.data.metric_names) || val.data.metric_names);
   }
 };
 

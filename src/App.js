@@ -50,6 +50,7 @@ class App extends React.Component {
       chartData: charts.map(newChart => ({
         metricType: newChart.metricType,
         metricName: newChart.metricName,
+        metricDataPath: newChart.metricDataPath,
         metricAggregationType: newChart.metricAggregationType
       }))
     };
@@ -118,6 +119,7 @@ class App extends React.Component {
       const chartDataEntry = {
         metricType: chartParams.metricType,
         metricName: chartParams.metricName,
+        metricDataPath: chartParams.metricDataPath,
         metricAggregationType: chartParams.metricAggregationType,
         data: res.data
       };
@@ -157,21 +159,18 @@ class App extends React.Component {
     this.setState({ metricField });
   }
 
-  handleNewChart({ newMetricType, newMetricName, newMetricAggregationType }) {
+  handleNewChart({ metricType, metricName, metricDataPath, metricAggregationType }) {
     const newChart = {
-      metricType: newMetricType,
-      metricName: newMetricName,
-      metricAggregationType: newMetricAggregationType
+      metricType,
+      metricName,
+      metricDataPath,
+      metricAggregationType
     };
     console.log("adding new Chart", newChart);
     this.setState(prevState => ({
       ...prevState,
       charts: [...prevState.charts, newChart],
-      chartData: [...prevState.chartData, {
-        metricType: newChart.metricType,
-        metricName: newChart.metricName,
-        metricAggregationType: newChart.metricAggregationType
-      }],
+      chartData: [...prevState.chartData, {...newChart}],
     }));
 
     let charts = JSON.parse(window.localStorage.getItem("charts"));
@@ -258,6 +257,7 @@ class App extends React.Component {
                   key={`${idx}-${chart.metricType}-${chart.metricName}-${chart.metricAggregationType}`}
                   type={chart.metricType}
                   metricName={chart.metricName}
+                  metricDataPath={chart.metricDataPath}
                   data={chart.data}
                   handleRefreshChart={() => this.refreshChartAtIdx(idx)}
                   handleRemovingChart={() => this.handleRemovingChart(idx)}

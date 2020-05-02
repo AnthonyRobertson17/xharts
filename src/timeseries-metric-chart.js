@@ -110,7 +110,7 @@ export default ({ type, metricName, data, handleRemovingChart, handleRefreshChar
           <div>{data && graphWrapper({ id: metricName, color: "hsl(72, 70%, 50%)", type, data })}</div>
           <small>
             <strong>{type}</strong>
-            {" graph for "}
+            {" for "}
             <strong>{metricName}</strong>
           </small>
         </CardContent>
