@@ -36,16 +36,16 @@ class AddCharts extends React.Component {
 
   handleNewChart = () => {
     console.log({
-      newMetricType: this.state.newMetricType,
-      newMetricName: this.state.newMetricName,
-      newMetricDataPath: this.state.newMetricDataPath,
-      newMetricAggregationType: this.state.newMetricAggregationType
+      metricType: this.state.newMetricType,
+      metricName: this.state.newMetricName,
+      metricDataPath: this.state.newMetricDataPath,
+      metricAggregationType: this.state.newMetricAggregationType
     });
     this.props.handleNewChart({
-      newMetricType: this.state.newMetricType,
-      newMetricName: this.state.newMetricName,
-      newMetricDataPath: this.state.newMetricDataPath,
-      newMetricAggregationType: this.state.newMetricAggregationType
+      metricType: this.state.newMetricType,
+      metricName: this.state.newMetricName,
+      metricDataPath: this.state.newMetricDataPath,
+      metricAggregationType: this.state.newMetricAggregationType
     });
 
     this.setState({

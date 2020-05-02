@@ -301,14 +301,22 @@ class BackendAdapter {
   }
 
   query(filters) {
-    const { startDatetime, endDatetime, metricName, metricType, metricAggregationType } = filters;
+    const {
+      startDatetime,
+      endDatetime,
+      metricName,
+      metricDataPath,
+      metricType,
+      metricAggregationType
+    } = filters;
     let url = `/metrics/${metricType}?`;
 
     let params = new URLSearchParams();
 
     params.set('start_datetime', startDatetime);
     params.set('end_datetime', endDatetime);
-    params.set('metric_name', `data.${metricName}`);
+    params.set('metric_data_path', `data.${metricDataPath}`);
+    params.set('q', `metric_name='${metricName}'`);
     params.set('bucket_count', metricAggregationType !== AGGREGATION_TYPE_TIMESERIES ? 1 : 10);
 
     url += params.toString();
