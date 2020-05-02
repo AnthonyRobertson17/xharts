@@ -41,8 +41,8 @@ export default ({ type, metricName, metricDataPath, data = {}, handleRemovingCha
           <Message error={data.error} buckets={data.buckets} />
           <small>
             <strong>{type}</strong>
-            {" card for "}
-            <strong>{metricName}</strong>{" with "}<strong>{metricDataPath}</strong>
+            {" of "}
+            <strong>{metricName}</strong>{" for "}<strong>{metricDataPath}</strong>
           </small>
         </CardContent>
       </Card>
